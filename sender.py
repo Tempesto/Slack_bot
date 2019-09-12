@@ -371,6 +371,7 @@ def add():
 
     send_data ={
         "user": int(us_id),
+        "bot_uniq_id": BOT_ID,
         "slack_client_name": client_data['name'],
         "slack_client_id": auth_response['user_id'],
         "slack_access_token": auth_response['access_token'],
