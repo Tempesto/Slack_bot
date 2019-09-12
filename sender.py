@@ -50,7 +50,7 @@ def postMessage_test():
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": f"{i['bot_step_title']}"
+                            "text": i['bot_step_title']
                         },
                         "accessory": {
                             "type": "button",
