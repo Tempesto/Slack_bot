@@ -555,17 +555,18 @@ def respond():
                     #сюда вставить запрос на сервер
                     client_data = requests.get(f'{GET}{BOT_ID}')
                     data = json.loads(client_data
-                    if data['slack_channel_id'] == i['slack_channel_id']:
-                        # i["bot_uniq_id"] = data["bot_uniq_id"]
-                        # i["completed_bot_step"] = data["completed_bot_step"]
-                        i["bot_schedule_id"] = data["bot_schedule_id"]
-                        i["slack_client_id"] = data["slack_client_id"]
-                        i["slack_channel_id"] = data["slack_channel_id"]
-                        i["slack_ts"] = data["slack_ts"]
-                        i["slack_access_token"] = data["slack_access_token"]
-                        i["bot_step_title"] = data["bot_step_title"]
-                        i["bot_next_step_success_title"] = data["bot_next_step_success_title"]
-                        i["objectives"] = data["objectives"]
+                    print("DATA SERVER ++++", data)
+                    # if data['slack_channel_id'] == i['slack_channel_id']:
+                    # i["bot_uniq_id"] = data["bot_uniq_id"]
+                    # i["completed_bot_step"] = data["completed_bot_step"]
+                    i["bot_schedule_id"] = data["bot_schedule_id"]
+                    i["slack_client_id"] = data["slack_client_id"]
+                    i["slack_channel_id"] = data["slack_channel_id"]
+                    i["slack_ts"] = data["slack_ts"]
+                    i["slack_access_token"] = data["slack_access_token"]
+                    i["bot_step_title"] = data["bot_step_title"]
+                    i["bot_next_step_success_title"] = data["bot_next_step_success_title"]
+                    i["objectives"] = data["objectives"]
 
                     print('\n This i in dialog_submission =', i, '\n')
                     i['focus'] = slack_payload['submission']['meal_preferences']
