@@ -377,8 +377,9 @@ def add():
     }
     print('send_data ===', send_data)
     print("\n Client_data =", client_data, '\n')
-    send_req = requests.post(POST, data=json.dumps(send_data))
+    send_req = requests.post(POST, json=json.dumps(send_data))
     print('send_req == =', send_req)
+    print('respons===', send_req.content)
     return redirect('http://dev.unitonomy.com')
 
 
