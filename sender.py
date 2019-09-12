@@ -1,7 +1,7 @@
 from slackeventsapi import SlackEventAdapter
 from slack import WebClient, RTMClient
 from config import SLACK_SIGNING_SECRET, SLACK_SIGNING_SECRET_TO_ADD_USERS, TOKENB, TOKENP, MINUTE, HOUR, \
-    DAY_OF_WEEK, SLACK_CLIENT_ID, BOT_ID, GET, POST
+    DAY_OF_WEEK, SLACK_CLIENT_ID, BOT_ID, GET, POST, COLLBACK
 import redis
 import requests
 
@@ -382,7 +382,7 @@ def add():
     send_req = requests.post(POST, json=send_data)
     print('send_req == =', send_req)
     print('respons===', send_req.content)
-    return redirect('http://dev.unitonomy.com')
+    return redirect('https://dev.unitonomy.com')
 
 
 # user click button
