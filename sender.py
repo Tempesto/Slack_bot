@@ -1,6 +1,6 @@
 from slackeventsapi import SlackEventAdapter
 from slack import WebClient, RTMClient
-from config import SLACK_SIGNING_SECRET, SLACK_SIGNING_SECRET_TO_ADD_USERS, TOKENB, TOKENP, MINUTE, HOUR, \
+from config import SLACK_SIGNING_SECRET, SLACK_SIGNING_SECRET_TO_ADD_USERS, TOKENB, TOKENP, connect, MINUTE, HOUR, \
     DAY_OF_WEEK, SLACK_CLIENT_ID, BOT_ID, GET, POST
 import redis
 import requests
@@ -382,8 +382,9 @@ def postMessage_test():
     # #     },
     # ]
     data = requests.get(f'{GET}{BOT_ID}')
+
     print('Data ==== ', data.json())
-    for i in data:
+    for i in data.json():
         if i['bot_step_id'] == 1:
             print('i=', i)
             print('channel', i['slack_channel_id'])
@@ -853,7 +854,8 @@ def respond():
                         attachments=''
                     )
                     #сюда вставить запрос на сервер
-                    data = requests.get(f'{GET}{BOT_ID}')
+                    client_data = requests.get(f'{GET}{BOT_ID}')
+                    data = client_data.json()
                     if data['slack_channel_id'] == i['slack_channel_id']:
                         # i["bot_uniq_id"] = data["bot_uniq_id"]
                         # i["completed_bot_step"] = data["completed_bot_step"]
