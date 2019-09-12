@@ -1,6 +1,6 @@
 from slackeventsapi import SlackEventAdapter
 from slack import WebClient, RTMClient
-from config import SLACK_SIGNING_SECRET, SLACK_SIGNING_SECRET_TO_ADD_USERS, TOKENB, TOKENP, connect, MINUTE, HOUR, \
+from config import SLACK_SIGNING_SECRET, SLACK_SIGNING_SECRET_TO_ADD_USERS, TOKENB, TOKENP, MINUTE, HOUR, \
     DAY_OF_WEEK, SLACK_CLIENT_ID, BOT_ID, GET, POST
 import redis
 import requests
