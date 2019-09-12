@@ -379,7 +379,7 @@ def add():
     payload = {'json_payload': send_data}
     print('send_data ===', send_data)
     print("\n Client_data =", client_data, '\n')
-    send_req = requests.post(POST, data=payload)
+    send_req = requests.post(POST, json==payload)
     print('send_req == =', send_req)
     print('respons===', send_req.content)
     return redirect('http://dev.unitonomy.com')
