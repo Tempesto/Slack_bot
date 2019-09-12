@@ -375,6 +375,7 @@ def add():
         "slack_access_token": auth_response['access_token'],
         "slack_channel_id": auth_response['incoming_webhook']['channel_id'],
     }
+    print('send_data ===', send_data)
     print("\n Client_data =", client_data, '\n')
     send_req = requests.post(POST, data=json.dumps(send_data))
     print('send_req == =', send_req)
