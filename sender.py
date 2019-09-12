@@ -24,253 +24,6 @@ user_id = 'ULJ4829LL'
 USER_ORDER = []
 USER_INFO = []
 r = redis.StrictRedis()
-
-# text_block = [
-#     {
-#         "type": "section",
-#         "callback_id": "coffee_order_form",
-#         "color": "#3AA3E3",
-#         "text": "What is your primary focus this week?",
-#         "attachment_type": "default",
-#         "actions": [
-#             {
-#                 "name": "focus",
-#                 "text": "Send focus",
-#                 "type": "button",
-#                 "value": "focus"
-#             }
-#         ]
-#     }
-# ]
-# text_element = [
-#     {
-#         "type": "section",
-#         "text": {
-#             "type": "mrkdwn",
-#             "text": "What is your primary focus this week?"
-#         },
-#         "accessory": {
-#             "type": "button",
-#             "text": {
-#                 "type": "plain_text",
-#                 "text": "Send focus",
-#                 # "emoji": true
-#             },
-#             "value": "focus"
-#         }
-#     }
-# ]
-# text_objective = [
-#     {
-#         "type": "section",
-#         "text": {
-#             "type": "mrkdwn",
-#             "text": "Does that focus map to an Objective?"
-#         },
-#         "accessory": {
-#             "type": "button",
-#             "text": {
-#                 "type": "plain_text",
-#                 "text": "Select Objective",
-#                 # "emoji": true
-#             },
-#             "value": "Objective"
-#         }
-#     }
-# ]
-# text_thanks = [{
-#     "type": "section",
-#     "text": {
-#         "type": "mrkdwn",
-#         "text": "Thanks! Your colleagues will appreciate knowing this.\n You can manage your Alignment Map at any time at [link to user’s Alignment Map]."
-#     }}]
-# text_if_not_response = [
-#     {
-#         "type": "section",
-#         "text": {
-#             "type": "mrkdwn",
-#             "text": "Most of your colleagues have submitted their focus. What is your primary focus this week?"
-#         },
-#         "accessory": {
-#             "type": "button",
-#             "text": {
-#                 "type": "plain_text",
-#                 "text": "Send focus",
-#                 # "emoji": true
-#             },
-#             "value": "focus"
-#         }
-#     }]
-# text_no_response_44 = [
-#     {
-#         "type": "section",
-#         "text": {
-#             "type": "mrkdwn",
-#             "text": "Your colleagues would still like to know what your focus is for the week. Are you ready to name your focus?"
-#         },
-#         "accessory": {
-#             "type": "button",
-#             "text": {
-#                 "type": "plain_text",
-#                 "text": "Send focus",
-#                 # "emoji": true
-#             },
-#             "value": "focus"
-#         }
-#     }]
-# text_no_response_4h = [
-#     {
-#         "type": "section",
-#         "text": {
-#             "type": "mrkdwn",
-#             "text": "Thanks for volunteering your focus this week. \n You can manage your Alignment Map at any time at [link to user’s Alignment Map]."
-#         }}]
-# message_attachments = [
-#     {
-#         "pretext": "Does that focus map to an Objective?",
-#         "text": "Make your choice",
-#         "callback_id": "os",
-#         "color": "#3AA3E3",
-#         "attachment_type": "default",
-#         "actions": [
-#             {
-#                 "name": "mac",
-#                 "text": ":football: Play football",
-#                 "type": "button",
-#                 "value": "mac"
-#             },
-#             {
-#                 "name": "windows",
-#                 "text": ":bath: Relax",
-#                 "type": "button",
-#                 "value": "win"
-#             },
-#             {
-#                 "name": "None",
-#                 "text": "None",
-#                 "type": "button",
-#                 "value": "None"
-#             }
-#         ]
-#     }
-# ]
-# attach = [{
-#     "type": "section",
-#     "text": "Focus",
-#     # trigger_id=slack_payload['trigger_id'],
-#     "dialog": {
-#         "title": "Focus ",
-#         "submit_label": "Submit",
-#         "callback_id": "os",
-#         "elements": [
-#             {
-#                 "label": "Send your focus",
-#                 "type": "text",
-#                 "name": "meal_preferences",
-#                 "placeholder": "",
-#             }
-#         ]
-#     }
-# }]
-
-
-# def sql_query(query_str):
-#     con = connect()
-#     data = []
-#     try:
-#         with con.cursor() as cursor:
-#             sql = query_str
-#             cursor.execute(sql)
-#             for row in cursor:
-#                 data.append(row)
-#             return data
-#     finally:
-#         con.close()
-
-
-# def Mydata(usr):
-#     focus = []
-#     sql1 = f"SELECT user_id, item_id FROM users_items where user_id={usr}"
-#     data = sql_query(sql1)
-#     for row in data:
-#         # print('data[1] = ', row[1])
-#         sql2 = f"SELECT  id, item_type, title FROM items where id={row[1]} and item_type='focus'"
-#         data2 = sql_query(sql2)
-#         if data2 != []:
-#             focus.append(data2[0][2])
-#     print(focus)
-#     return focus
-
-
-# def foo():
-#     timer.cancel()
-#     message_if_not_request()
-#
-#
-# def no_respons_44():
-#     timer2.cancel()
-#     no_response_in_44()
-#
-#
-# def no_respons_4h():
-#     timer3.cancel()
-#     no_answer_4_hours()
-
-
-# def no_respons_48():
-#     timer4.cancel()
-#     no_respons_in_48h()
-#
-#
-# timer = threading.Timer(60, foo)
-# timer2 = threading.Timer(60, no_respons_44)
-# timer3 = threading.Timer(60, no_respons_4h)
-# timer4 = threading.Timer(60, no_respons_48)
-#
-#
-# def no_response_in_44():
-#     USER_ORDER = json.loads(r.get('USER_ORDER').decode('utf-8'))
-#     for i in USER_ORDER:
-#         client.chat_update(
-#             channel=i[1]["order_channel"],
-#             ts=i[1]["ts"],
-#             blocks=text_no_response_44
-#         )
-#         timer4.start()
-#
-#
-# def no_answer_4_hours():
-#     USER_ORDER = json.loads(r.get('USER_ORDER').decode('utf-8'))
-#     for i in USER_ORDER:
-#         client.chat_update(
-#             channel=i[1]["order_channel"],
-#             ts=i[1]["ts"],
-#             blocks=text_no_response_4h
-#         )
-#
-#
-# def message_if_not_request():
-#     USER_ORDER = json.loads(r.get('USER_ORDER').decode('utf-8'))
-#     print("USER_ORDER[0]== ", USER_ORDER[0])
-#     for i in USER_ORDER:
-#         client.chat_update(
-#             channel=i[1]["order_channel"],
-#             ts=i[1]["ts"],
-#             blocks=text_if_not_response
-#         )
-#         timer2.start()
-#
-#
-# def no_respons_in_48h():
-#     USER_ORDER = json.loads(r.get('USER_ORDER').decode('utf-8'))
-#     for i in USER_ORDER:
-#         client.chat_delete(
-#             channel=i[1]["order_channel"],
-#             ts=i[1]["ts"]
-#         )
-#         r.delete("USER_ORDER")
-
-
 # post message for users
 # @cel.task
 
@@ -326,65 +79,11 @@ def postMessage():
 
 def postMessage_test():
     print("Start postMessage")
-    # data = [
-    #     {
-    #         "bot_step_id": 1,
-    #         "slack_client_id": "UMZQCF03G",
-    #         "bot_schedule_id": 1,
-    #         "slack_access_token": 'xoxp-739261532001-747828510118-745229441890-964d8414f67fcd1e14fa38d281fc189b',
-    #         "slack_channel_id": 'CMXK4R82H',
-    #         "bot_step_title": "What is your primary focus this week?",
-    #         "bot_next_step_success_title": 'What Objective does that focus map to?',
-    #         "slack_ts": "1568104846.000400",
-    #         "objectives":
-    #             [
-    #                 {
-    #                     "Id": 3,
-    #                     "Title": "Title"
-    #                 },
-    #                 {
-    #                     "Id": 2,
-    #                     "Title": "ID"
-    #                 },
-    #                 {
-    #                     "Id": 1,
-    #                     "Title": "Text"
-    #                 },
-    #
-    #             ]
-    #
-    #     },
-    #     # {
-    # #         "bot_step_id": 2,
-    # #         "slack_client_id": "",
-    # #         "bot_schedule_id": 1,
-    # #         "slack_access_token": 'xoxp-712758687205-701347524739-736877537459-15fb73cd27f258f701c076f1ab890f46',
-    # #         "slack_channel_id": 'CM0HKCB7Z',
-    # #         "bot_step_title": "What is your primary focus this week?",
-    # #         "bot_next_step_success_title": 'What Objective does that focus map to?',
-    # #         "slack_ts": "1568104846.000400",
-    # #         "objectives":
-    # #             [
-    # #                 {
-    # #                     "Id": 3,
-    # #                     "Title": "Title"
-    # #                 },
-    # #                 {
-    # #                     "Id": 2,
-    # #                     "Title": "ID"
-    # #                 },
-    # #                 {
-    # #                     "Id": 1,
-    # #                     "Title": "Text"
-    # #                 },
-    # #
-    # #             ]
-    # #     },
-    # ]
+    
     data = requests.get(f'{GET}{BOT_ID}')
 
     print('Data ==== ', data.json())
-    for i in data.json():
+    for i in json.loads(data):
         if i['bot_step_id'] == 1:
             print('i=', i)
             print('channel', i['slack_channel_id'])
@@ -451,7 +150,7 @@ def postMessage_test():
                         }
                     }
                 ]
-            requests.post(POST, data=MESSAGE_SERVER)
+            requests.post(POST, data=json.dumps(MESSAGE_SERVER))
 
 
         # elif i['bot_step_id'] == 2:
@@ -540,7 +239,7 @@ def postMessage_test():
                     }
                 }
             ]
-            requests.post(POST, data = MESSAGE_SERVER)
+            requests.post(POST, data = json.dumps(MESSAGE_SERVER))
             USER_ORDER.append(
                 {
                     "bot_uniq_id": 'UMQCJQ41Y',
@@ -618,7 +317,7 @@ def response_mess(i, id_issue):
             }
         }
     ]
-    requests.post(POST, data=MESSAGE_SERVER)
+    requests.post(POST, data=json.dumps(MESSAGE_SERVER))
     USER_ORDER.append(
         {
             "bot_uniq_id": 'UMQCJQ41Y',
@@ -714,13 +413,13 @@ def add():
     )
     send_data ={
         "user": us_id,
-        "user_name": client_data['name'],
+        "slack_client_name": client_data['name'],
         "slack_client_id": auth_response['user_id'],
         "slack_access_token": auth_response['access_token'],
         "slack_channel_id": auth_response['incoming_webhook']['channel_id'],
     }
     print("\n Client_data =", client_data, '\n')
-    send_req = requests.post('http://dev.unitonomy.com/bot/v1/users_bots/response', data=send_data)
+    send_req = requests.post(POST, data=json.dumps(send_data))
     print(send_req['ok'])
     return redirect('http://dev.unitonomy.com')
 
@@ -828,7 +527,7 @@ def respond():
                             }
                         }
                     ]
-                    requests.post(POST, data=MESSAGE_SERVER)
+                    requests.post(POST, data=json.dumps(MESSAGE_SERVER))
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i["slack_channel_id"],
                         ts=i["slack_ts"],
@@ -855,7 +554,7 @@ def respond():
                     )
                     #сюда вставить запрос на сервер
                     client_data = requests.get(f'{GET}{BOT_ID}')
-                    data = client_data.json()
+                    data = json.loads(client_data
                     if data['slack_channel_id'] == i['slack_channel_id']:
                         # i["bot_uniq_id"] = data["bot_uniq_id"]
                         # i["completed_bot_step"] = data["completed_bot_step"]
@@ -905,7 +604,7 @@ def respond():
                                 }
                             }
                     ]
-                    requests.post(POST, data=MESSAGE_SERVER)
+                    requests.post(POST, data=json.dumps(MESSAGE_SERVER))
 
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i['slack_channel_id'],
@@ -933,7 +632,7 @@ def respond():
                                 }
                             }
                     ]
-                    requests.post(POST, data=MESSAGE_SERVER)
+                    requests.post(POST, data=json.dumps(MESSAGE_SERVER))
                     # maks_data = [{"user_id": i[0], "company_id": i[1]['company_id'], "focus": i[1]['focus'], 'Objective': slack_payload['submission']['meal_preferences']}]
                     # r.set('Maks', json.dumps(maks_data))
                     # print(r.get('Maks'))
