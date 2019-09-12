@@ -35,10 +35,11 @@ def postMessage_test():
     print("BOT_ID =", BOT_ID)
   
    
-    data = requests.get(GET+BOT_ID)
+    response = requests.get(GET+BOT_ID)
+    data = response.json()
 
-    print('Data ==== ', data.json())
-    for i in json(data):
+    print('Data ==== ', data)
+    for i in data:
         if i['bot_step_id'] == 1:
             print('i=', i)
             print('channel', i['slack_channel_id'])
