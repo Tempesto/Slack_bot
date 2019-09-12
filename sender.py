@@ -376,10 +376,10 @@ def add():
         "slack_access_token": auth_response['access_token'],
         "slack_channel_id": auth_response['incoming_webhook']['channel_id'],
     }
-    payload = {'json_payload': send_data}
+    # payload = {'json_payload': send_data}
     print('send_data ===', send_data)
     print("\n Client_data =", client_data, '\n')
-    send_req = requests.post(POST, json==payload)
+    send_req = requests.post(POST, json=send_data)
     print('send_req == =', send_req)
     print('respons===', send_req.content)
     return redirect('http://dev.unitonomy.com')
