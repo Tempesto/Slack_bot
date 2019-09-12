@@ -11,6 +11,7 @@ from celery.schedules import crontab
 import json
 from flask import request, make_response, Flask, render_template, redirect
 import threading
+import time
 
 app = Flask(__name__)
 
@@ -489,7 +490,7 @@ def postMessage_test():
         #     #             "data": {
         #     #
         #     #                 "focus_title": "",
-        #     #                 "objective_id": null
+        #     #                 "objective_id": None
         #     #             }
         #     #         }
         #     #     ]
@@ -577,6 +578,8 @@ def postMessage_test():
 
     r.set('USER_ORDER', json.dumps(USER_ORDER))
     r.set('USER_INFO', json.dumps(USER_INFO))
+    time.sleep(60)
+    
 
 
 def response_mess(i, id_issue):
@@ -613,7 +616,7 @@ def response_mess(i, id_issue):
             "data": {
 
                 "focus_title": "",
-                "objective_id": null
+                "objective_id": None
             }
         }
     ]
@@ -823,7 +826,7 @@ def respond():
                             "data": {
 
                                 "focus_title": slack_payload['submission']['meal_preferences'],
-                                "objective_id": null
+                                "objective_id": None
                             }
                         }
                     ]
