@@ -28,54 +28,6 @@ r = redis.StrictRedis()
 # @cel.task
 
 
-def postMessage():
-    # response = requests.get('http://dev.unitonomy.com/api/v1/users/')
-    # json_load = response.json()
-    # for i in json_load:
-    #     print(i["Id"])
-    print("Start postMessage")
-    # sql1 = f"SELECT id, slack_id, company_id FROM users"
-    # data = sql_query(sql1)
-    data = [
-        (
-            1, 'ULJ4829LL', 1
-        ),
-        # (
-        #     2, 'DLYNALFEZ', 2
-        # )
-    ]
-    print('Data ==== ', data)
-    for i in data:
-        print('i=', i)
-        print('i[1]=', i[1])
-        # order_dm = WebClient('xoxb-712758687205-737340590337-OLlAzy7RntPgjIH32vAwJ9RX').chat_postMessage(
-        order_dm = client.chat_postMessage(
-            as_user=False,
-            channel=i[1],
-            blocks=text_element,
-            attachments=''
-        )
-        assert order_dm["ok"]
-        print('Assert : ok')
-        print(order_dm)
-
-        USER_ORDER.append([
-            f'{i[0]}',
-            {
-                "slack_channel_id": order_dm["channel"],
-                "message_ts": order_dm["ts"],
-                "order": {},
-                "message": order_dm["message"]["text"],
-                "ts": order_dm["ts"],
-                "company_id": i[2],
-                "focus": ''
-            }
-        ])
-    print("USER_ORDER i n out = ", USER_ORDER)
-    r.set("USER_ORDER", json.dumps(USER_ORDER))
-    # timer.start()
-
-
 
 def postMessage_test():
     print("Start postMessage")
