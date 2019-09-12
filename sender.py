@@ -1,7 +1,7 @@
 from slackeventsapi import SlackEventAdapter
 from slack import WebClient, RTMClient
 from config import SLACK_SIGNING_SECRET, SLACK_SIGNING_SECRET_TO_ADD_USERS, TOKENB, TOKENP, connect, MINUTE, HOUR, \
-    DAY_OF_WEEK, SLACK_CLIENT_ID, BOT_ID
+    DAY_OF_WEEK, SLACK_CLIENT_ID, BOT_ID, GET, POST
 import redis
 import requests
 
@@ -11,7 +11,6 @@ from celery.schedules import crontab
 import json
 from flask import request, make_response, Flask, render_template, redirect
 import threading
-import time
 
 app = Flask(__name__)
 
@@ -382,8 +381,8 @@ def postMessage_test():
     # #             ]
     # #     },
     # ]
-    data = requests.get(f'https://dev.unitonomy.com/bot/v1/users_bots/scheduled?query={BOT_ID}')
-    print('Data ==== ', data)
+    data = requests.get(f'{GET}{BOT_ID}')
+    print('Data ==== ', data.json())
     for i in data:
         if i['bot_step_id'] == 1:
             print('i=', i)
@@ -451,7 +450,7 @@ def postMessage_test():
                         }
                     }
                 ]
-            requests.post('https://dev.unitonomy.com/bot/v1/users_bots/response', data=MESSAGE_SERVER)
+            requests.post(POST, data=MESSAGE_SERVER)
 
 
         # elif i['bot_step_id'] == 2:
@@ -460,7 +459,7 @@ def postMessage_test():
         #     USER_ORDER.append(
         #         {
         #             "bot_uniq_id": 'UMQCJQ41Y',
-        #             "completed_bot_step": 'nill',
+        #             "completed_bot_step": 'None',
         #             "bot_schedule_id": i['bot_schedule_id'],
         #             "slack_client_id": i['slack_client_id'],
         #             "slack_channel_id": i['slack_channel_id'],
@@ -490,7 +489,7 @@ def postMessage_test():
         #     #             "data": {
         #     #
         #     #                 "focus_title": "",
-        #     #                 "objective_id": None
+        #     #                 "objective_id": null
         #     #             }
         #     #         }
         #     #     ]
@@ -540,11 +539,11 @@ def postMessage_test():
                     }
                 }
             ]
-            requests.post('https://dev.unitonomy.com/bot/v1/users_bots/response', data = MESSAGE_SERVER)
+            requests.post(POST, data = MESSAGE_SERVER)
             USER_ORDER.append(
                 {
                     "bot_uniq_id": 'UMQCJQ41Y',
-                    "completed_bot_step": 'nill',
+                    "completed_bot_step": 'None',
                     "bot_schedule_id": i['bot_schedule_id'],
                     "slack_client_id": i['slack_client_id'],
                     "slack_channel_id": order_dm["channel"],
@@ -578,8 +577,6 @@ def postMessage_test():
 
     r.set('USER_ORDER', json.dumps(USER_ORDER))
     r.set('USER_INFO', json.dumps(USER_INFO))
-    time.sleep(60)
-    
 
 
 def response_mess(i, id_issue):
@@ -616,11 +613,11 @@ def response_mess(i, id_issue):
             "data": {
 
                 "focus_title": "",
-                "objective_id": None
+                "objective_id": null
             }
         }
     ]
-    requests.post('https://dev.unitonomy.com/bot/v1/users_bots/response', data=MESSAGE_SERVER)
+    requests.post(POST, data=MESSAGE_SERVER)
     USER_ORDER.append(
         {
             "bot_uniq_id": 'UMQCJQ41Y',
@@ -826,11 +823,11 @@ def respond():
                             "data": {
 
                                 "focus_title": slack_payload['submission']['meal_preferences'],
-                                "objective_id": None
+                                "objective_id": null
                             }
                         }
                     ]
-                    requests.post('https://dev.unitonomy.com/bot/v1/users_bots/response', data=MESSAGE_SERVER)
+                    requests.post(POST, data=MESSAGE_SERVER)
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i["slack_channel_id"],
                         ts=i["slack_ts"],
@@ -856,7 +853,7 @@ def respond():
                         attachments=''
                     )
                     #сюда вставить запрос на сервер
-                    data = requests.get(f'https://dev.unitonomy.com/http://127.0.01:8888/bot/v1/users_bots/scheduled?query={BOT_ID}')
+                    data = requests.get(f'{GET}{BOT_ID}')
                     if data['slack_channel_id'] == i['slack_channel_id']:
                         # i["bot_uniq_id"] = data["bot_uniq_id"]
                         # i["completed_bot_step"] = data["completed_bot_step"]
@@ -906,7 +903,7 @@ def respond():
                                 }
                             }
                     ]
-                    requests.post('https://dev.unitonomy.com/bot/v1/users_bots/response', data=MESSAGE_SERVER)
+                    requests.post(POST, data=MESSAGE_SERVER)
 
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i['slack_channel_id'],
@@ -934,7 +931,7 @@ def respond():
                                 }
                             }
                     ]
-                    requests.post('https://dev.unitonomy.com/bot/v1/users_bots/response', data=MESSAGE_SERVER)
+                    requests.post(POST, data=MESSAGE_SERVER)
                     # maks_data = [{"user_id": i[0], "company_id": i[1]['company_id'], "focus": i[1]['focus'], 'Objective': slack_payload['submission']['meal_preferences']}]
                     # r.set('Maks', json.dumps(maks_data))
                     # print(r.get('Maks'))
