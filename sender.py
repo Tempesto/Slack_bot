@@ -38,9 +38,9 @@ def postMessage_test():
     response = requests.get(GET+BOT_ID)
     responseJson = response.json()
 
-    print('Data ==== ', responseJson.data)
-    if len(responseJson.data) != 0:
-        for i in responseJson.data:
+    print('Data ==== ', responseJson['data'])
+    if len(responseJson['data']) != 0:
+        for i in responseJson['data']:
             if i['bot_step_id'] == 1:
                 print('i=', i)
                 print('channel', i['slack_channel_id'])
