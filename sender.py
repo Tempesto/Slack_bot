@@ -32,8 +32,10 @@ r = redis.StrictRedis()
 def postMessage_test():
     print("Start postMessage")
     print("GET =", GET)
-    print("POST =", POST)
-    data = requests.get(f'{GET}{BOT_ID}')
+    print("BOT_ID =", BOT_ID)
+  
+   
+    data = requests.get(GET+BOT_ID)
 
     print('Data ==== ', data.json())
     for i in json.loads(data):
@@ -506,7 +508,7 @@ def respond():
                         attachments=''
                     )
                     #сюда вставить запрос на сервер
-                    client_data = requests.get(f'{GET}{BOT_ID}')
+                    client_data = requests.get(GET+BOT_ID)
                     data = json.loads(client_data)
                     print("DATA SERVER ++++", data)
                     # if data['slack_channel_id'] == i['slack_channel_id']:
