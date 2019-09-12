@@ -39,66 +39,156 @@ def postMessage_test():
     data = response.json()
 
     print('Data ==== ', data)
-    for i in data:
-        if i['bot_step_id'] == 1:
-            print('i=', i)
-            print('channel', i['slack_channel_id'])
-            order_dm = WebClient(i['slack_access_token']).chat_postMessage(
-                as_user=False,
-                channel=i['slack_channel_id'],
-                blocks=[
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": i['bot_step_title']
-                        },
-                        "accessory": {
-                            "type": "button",
+    if len(data) != 0:
+        for i in data:
+            if i['bot_step_id'] == 1:
+                print('i=', i)
+                print('channel', i['slack_channel_id'])
+                order_dm = WebClient(i['slack_access_token']).chat_postMessage(
+                    as_user=False,
+                    channel=i['slack_channel_id'],
+                    blocks=[
+                        {
+                            "type": "section",
                             "text": {
-                                "type": "plain_text",
-                                "text": "Send focus",
-                                # "emoji": true
+                                "type": "mrkdwn",
+                                "text": i['bot_step_title']
                             },
-                            "value": "focus"
+                            "accessory": {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Send focus",
+                                    # "emoji": true
+                                },
+                                "value": "focus"
+                            }
                         }
+                    ],
+                    attachments=''
+                )
+                assert order_dm["ok"]
+                print('Assert : ok')
+                print(order_dm)
+                USER_ORDER.append(
+                    {
+                        "bot_uniq_id": 'UMQCJQ41Y',
+                        # "completed_bot_step": None,
+                        "bot_schedule_id": i['bot_schedule_id'],
+                        "slack_client_id": i['slack_client_id'],
+                        "slack_channel_id": order_dm["channel"],
+                        "slack_ts": order_dm["ts"],
+                        # "message": order_dm["message"]["text"],
+                        # "ts": order_dm["ts"],
+                        "focus": '',
+                        "slack_access_token": i['slack_access_token'],
+                        "bot_step_title": i['bot_step_title'],
+                        "bot_next_step_success_title": i['bot_next_step_success_title'],
+                        "objectives": i["objectives"]
+                    })
+                USER_INFO.append(
+                    {
+                        "slack_client_id": i['slack_client_id'],
+                        "slack_channel_id": order_dm["channel"],
+                        "message": order_dm["message"]["text"]
                     }
-                ],
-                attachments=''
-            )
-            assert order_dm["ok"]
-            print('Assert : ok')
-            print(order_dm)
-            USER_ORDER.append(
-                {
-                    "bot_uniq_id": 'UMQCJQ41Y',
-                    # "completed_bot_step": None,
-                    "bot_schedule_id": i['bot_schedule_id'],
-                    "slack_client_id": i['slack_client_id'],
-                    "slack_channel_id": order_dm["channel"],
-                    "slack_ts": order_dm["ts"],
-                    # "message": order_dm["message"]["text"],
-                    # "ts": order_dm["ts"],
-                    "focus": '',
-                    "slack_access_token": i['slack_access_token'],
-                    "bot_step_title": i['bot_step_title'],
-                    "bot_next_step_success_title": i['bot_next_step_success_title'],
-                    "objectives": i["objectives"]
-                })
-            USER_INFO.append(
-                {
-                    "slack_client_id": i['slack_client_id'],
-                    "slack_channel_id": order_dm["channel"],
-                    "message": order_dm["message"]["text"]
-                }
-            )
-            MESSAGE_SERVER= [
+                )
+                MESSAGE_SERVER= [
+                        {
+                            "bot_uniq_id":'UMQCJQ41Y',
+                            "completed_bot_step": None,
+                            "bot_schedule_id": i["bot_schedule_id"],
+                            "slack_client_id": i['slack_client_id'],
+                            "slack_ts": order_dm["ts"],
+                            "data": {
+
+                                "focus_title": "",
+                                "objective_id": None
+                            }
+                        }
+                    ]
+                requests.post(POST, data=json.dumps(MESSAGE_SERVER))
+
+
+            # elif i['bot_step_id'] == 2:
+            #     print('i=', i)
+            #     print('channel', i['slack_channel_id'])
+            #     USER_ORDER.append(
+            #         {
+            #             "bot_uniq_id": 'UMQCJQ41Y',
+            #             "completed_bot_step": 'None',
+            #             "bot_schedule_id": i['bot_schedule_id'],
+            #             "slack_client_id": i['slack_client_id'],
+            #             "slack_channel_id": i['slack_channel_id'],
+            #             "slack_ts": i['slack_ts'],
+            #             # "ts": i['slack_ts'],
+            #             "focus": '',
+            #             "slack_access_token": i['slack_access_token'],
+            #             "bot_step_title": i['bot_step_title'],
+            #             "bot_next_step_success_title": i['bot_next_step_success_title'],
+            #             "objectives": i["objectives"]
+            #         })
+            #     USER_INFO.append(
+            #         {
+            #             "slack_client_id": i['slack_client_id'],
+            #             "slack_channel_id": i["slack_channel_id"],
+            #             "message": i['bot_step_title']
+            #         }
+            #     )
+            #     # MESSAGE_SERVER= [
+            #     #         {
+            #     #             "bot_uniq_id":'UMQCJQ41Y',
+            #     #             "completed_bot_step": 1,
+            #     #             "bot_schedule_id": i["bot_schedule_id"],
+            #     #             "response": true,
+            #     #             "slack_client_id": i['slack_client_id'],
+            #     #             "slack_ts": order_dm["ts"],
+            #     #             "data": {
+            #     #
+            #     #                 "focus_title": "",
+            #     #                 "objective_id": null
+            #     #             }
+            #     #         }
+            #     #     ]
+
+            elif i['bot_step_id'] == 5 or i['bot_step_id'] == 6:
+                if i['bot_step_id'] == 5:
+                    response_mess(i, 5)
+                elif i['bot_step_id'] == 6:
+                    response_mess(i, 6)
+            elif i['bot_step_id'] == 4:
+                order_dm = WebClient(i['slack_access_token']).chat_update(
+                    channel=i["slack_channel_id"],
+                    ts=i["slack_ts"],
+                    blocks=
+                    [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": i['bot_step_title']
+                            },
+                            "accessory": {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Select Objective",
+                                    # "emoji": true
+                                },
+                                "value": "Objective"
+                            }
+                        }
+                    ],
+                    attachments=''
+                )
+                MESSAGE_SERVER = [
                     {
                         "bot_uniq_id":'UMQCJQ41Y',
-                        "completed_bot_step": None,
+                        "completed_bot_step": 4,
                         "bot_schedule_id": i["bot_schedule_id"],
                         "slack_client_id": i['slack_client_id'],
-                        "slack_ts": order_dm["ts"],
+                        "slack_channel_id":i["slack_channel_id"],
+                        "slack_ts": i['slack_ts'],
                         "data": {
 
                             "focus_title": "",
@@ -106,130 +196,41 @@ def postMessage_test():
                         }
                     }
                 ]
-            requests.post(POST, data=json.dumps(MESSAGE_SERVER))
-
-
-        # elif i['bot_step_id'] == 2:
-        #     print('i=', i)
-        #     print('channel', i['slack_channel_id'])
-        #     USER_ORDER.append(
-        #         {
-        #             "bot_uniq_id": 'UMQCJQ41Y',
-        #             "completed_bot_step": 'None',
-        #             "bot_schedule_id": i['bot_schedule_id'],
-        #             "slack_client_id": i['slack_client_id'],
-        #             "slack_channel_id": i['slack_channel_id'],
-        #             "slack_ts": i['slack_ts'],
-        #             # "ts": i['slack_ts'],
-        #             "focus": '',
-        #             "slack_access_token": i['slack_access_token'],
-        #             "bot_step_title": i['bot_step_title'],
-        #             "bot_next_step_success_title": i['bot_next_step_success_title'],
-        #             "objectives": i["objectives"]
-        #         })
-        #     USER_INFO.append(
-        #         {
-        #             "slack_client_id": i['slack_client_id'],
-        #             "slack_channel_id": i["slack_channel_id"],
-        #             "message": i['bot_step_title']
-        #         }
-        #     )
-        #     # MESSAGE_SERVER= [
-        #     #         {
-        #     #             "bot_uniq_id":'UMQCJQ41Y',
-        #     #             "completed_bot_step": 1,
-        #     #             "bot_schedule_id": i["bot_schedule_id"],
-        #     #             "response": true,
-        #     #             "slack_client_id": i['slack_client_id'],
-        #     #             "slack_ts": order_dm["ts"],
-        #     #             "data": {
-        #     #
-        #     #                 "focus_title": "",
-        #     #                 "objective_id": null
-        #     #             }
-        #     #         }
-        #     #     ]
-
-        elif i['bot_step_id'] == 5 or i['bot_step_id'] == 6:
-            if i['bot_step_id'] == 5:
-                response_mess(i, 5)
-            elif i['bot_step_id'] == 6:
-                response_mess(i, 6)
-        elif i['bot_step_id'] == 4:
-            order_dm = WebClient(i['slack_access_token']).chat_update(
-                channel=i["slack_channel_id"],
-                ts=i["slack_ts"],
-                blocks=
-                [
+                requests.post(POST, data = json.dumps(MESSAGE_SERVER))
+                USER_ORDER.append(
                     {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": i['bot_step_title']
-                        },
-                        "accessory": {
-                            "type": "button",
-                            "text": {
-                                "type": "plain_text",
-                                "text": "Select Objective",
-                                # "emoji": true
-                            },
-                            "value": "Objective"
-                        }
+                        "bot_uniq_id": 'UMQCJQ41Y',
+                        "completed_bot_step": 'None',
+                        "bot_schedule_id": i['bot_schedule_id'],
+                        "slack_client_id": i['slack_client_id'],
+                        "slack_channel_id": order_dm["channel"],
+                        "slack_ts": order_dm["ts"],
+                        # "message": order_dm["message"]["text"],
+                        # "ts": order_dm["ts"],
+                        "focus": '',
+                        "slack_access_token": i['slack_access_token'],
+                        "bot_step_title": i['bot_step_title'],
+                        "bot_next_step_success_title": i['bot_next_step_success_title'],
+                        "objectives": i["objectives"]
+                    })
+                USER_INFO.append(
+                    {
+                        "slack_client_id": i['slack_client_id'],
+                        "slack_channel_id": order_dm["channel"],
+                        "message": order_dm["message"]["text"],
+                        "completed_bot_step": 4,
+                        "response": order_dm['ok'],
                     }
-                ],
-                attachments=''
-            )
-            MESSAGE_SERVER = [
-                {
-                    "bot_uniq_id":'UMQCJQ41Y',
-                    "completed_bot_step": 4,
-                    "bot_schedule_id": i["bot_schedule_id"],
-                    "slack_client_id": i['slack_client_id'],
-                    "slack_channel_id":i["slack_channel_id"],
-                    "slack_ts": i['slack_ts'],
-                    "data": {
-
-                        "focus_title": "",
-                        "objective_id": None
-                    }
-                }
-            ]
-            requests.post(POST, data = json.dumps(MESSAGE_SERVER))
-            USER_ORDER.append(
-                {
-                    "bot_uniq_id": 'UMQCJQ41Y',
-                    "completed_bot_step": 'None',
-                    "bot_schedule_id": i['bot_schedule_id'],
-                    "slack_client_id": i['slack_client_id'],
-                    "slack_channel_id": order_dm["channel"],
-                    "slack_ts": order_dm["ts"],
-                    # "message": order_dm["message"]["text"],
-                    # "ts": order_dm["ts"],
-                    "focus": '',
-                    "slack_access_token": i['slack_access_token'],
-                    "bot_step_title": i['bot_step_title'],
-                    "bot_next_step_success_title": i['bot_next_step_success_title'],
-                    "objectives": i["objectives"]
-                })
-            USER_INFO.append(
-                {
-                    "slack_client_id": i['slack_client_id'],
-                    "slack_channel_id": order_dm["channel"],
-                    "message": order_dm["message"]["text"],
-                    "completed_bot_step": 4,
-                    "response": order_dm['ok'],
-                }
-            )
-        elif i['bot_step_id'] == 7:
-            order_dm = WebClient(i['slack_access_token']).chat_delete(
-                channel=i['slack_channel_id'],
-                ts=i['slack_ts']
-            )
+                )
+            elif i['bot_step_id'] == 7:
+                order_dm = WebClient(i['slack_access_token']).chat_delete(
+                    channel=i['slack_channel_id'],
+                    ts=i['slack_ts']
+                )
 
 
-            # print('USER_ORDER in step 4 ====', USER_ORDER)
-    # print('USER_ORDER  = == = = ', USER_ORDER)
+                # print('USER_ORDER in step 4 ====', USER_ORDER)
+        # print('USER_ORDER  = == = = ', USER_ORDER)
 
     r.set('USER_ORDER', json.dumps(USER_ORDER))
     r.set('USER_INFO', json.dumps(USER_INFO))
