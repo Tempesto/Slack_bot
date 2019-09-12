@@ -38,7 +38,7 @@ def postMessage_test():
     data = requests.get(GET+BOT_ID)
 
     print('Data ==== ', data.json())
-    for i in json.loads(data):
+    for i in json(data):
         if i['bot_step_id'] == 1:
             print('i=', i)
             print('channel', i['slack_channel_id'])
@@ -509,7 +509,7 @@ def respond():
                     )
                     #сюда вставить запрос на сервер
                     client_data = requests.get(GET+BOT_ID)
-                    data = json.loads(client_data)
+                    data = json(client_data)
                     print("DATA SERVER ++++", data)
                     # if data['slack_channel_id'] == i['slack_channel_id']:
                     # i["bot_uniq_id"] = data["bot_uniq_id"]
