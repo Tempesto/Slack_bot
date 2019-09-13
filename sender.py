@@ -62,6 +62,13 @@ def post_message():
                 assert order_dm["ok"]
                 print('Assert : ok')
                 print(order_dm)
+                obj_list = []
+                for j in i["objectives"]:
+                    x = {
+                        "Id": j["Id"],
+                        "Title": j["Title"]
+                    }
+                    obj_list.append(x)
                 USER_ORDER.append(
                     {
                         "bot_uniq_id": BOT_ID,
@@ -73,14 +80,9 @@ def post_message():
                         "slack_access_token": i['slack_access_token'],
                         "bot_step_title": i['bot_step_title'],
                         "bot_next_step_success_title": i['bot_next_step_success_title'],
-                        "objectives": []
-                        #     {
-                        #         str(i["objectives"][0]["Id"]),
-                        #         i["objectives"][0]["Title"]
-                        #     }
-                        # ]
-
+                        "objectives": obj_list
                     })
+                print("USER_ORDER ===", USER_ORDER)
                 USER_INFO.append(
                     {
                         "slack_client_id": i['slack_client_id'],
@@ -319,7 +321,7 @@ def respond():
             if slack_payload['actions'][0]['value'] == 'focus':
                 print('slack_payload["trigger_id"]= ', slack_payload['trigger_id'])
                 if slack_payload['container']['channel_id'] == i['slack_channel_id']:
-                    print("if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
+                    print("focus if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
                     WebClient(i['slack_access_token']).dialog_open(
                         type='section',
                         text='Focus',
@@ -344,7 +346,7 @@ def respond():
             elif slack_payload['actions'][0]['value'] == 'Objective':
                 print("elif slack_payload['actions'][0]['value'] == 'Objective':")
                 if slack_payload['container']['channel_id'] == i['slack_channel_id']:
-                    print("if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
+                    print("Objective if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
                     a = []
                     for objective in i['objectives']:
                         print('objectives===', objective)
