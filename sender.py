@@ -391,6 +391,8 @@ def respond():
                     print("MESSAGE_SERVER =",MESSAGE_SERVER)
                     response_client_data = requests.post(POST, json=MESSAGE_SERVER)
                     client_data_dict = json.loads(response_client_data.text)
+                    client_data_list = client_data_dict['data']
+
 
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i["slack_channel_id"],
@@ -418,37 +420,42 @@ def respond():
                     # client_data = requests.get(GET + BOT_ID)
                     # data = client_data.json()
 
-                    if len(client_data_dict['data']) != 0:
-                        client_data = client_data_dict['data']
-                        i["bot_schedule_id"] = str(client_data["bot_schedule_id"])
-                        i["slack_client_id"] = client_data["slack_client_id"]
-                        i["slack_channel_id"] = client_data["slack_channel_id"]
-                        i["slack_ts"] = client_data["slack_ts"]
-                        i["slack_access_token"] = client_data["slack_access_token"]
-                        i["bot_step_title"] = str(client_data["bot_step_title"])
-                        i["bot_next_step_success_title"] = client_data["bot_next_step_success_title"]
-                        i["objectives"] = [
-                            {
-                                str(client_data["objectives"][0]["Id"]),
-                                client_data["objectives"][0]["Title"]
-                            }
-                        ]
+                    if len(client_data_list) != 0:
+                        for j in client_data_list:
+                            i["bot_schedule_id"] = str(j["bot_schedule_id"])
+                            i["slack_client_id"] = j["slack_client_id"]
+                            i["slack_channel_id"] = j["slack_channel_id"]
+                            i["slack_ts"] = j["slack_ts"]
+                            i["slack_access_token"] = j["slack_access_token"]
+                            i["bot_step_title"] = str(j["bot_step_title"])
+                            i["bot_next_step_success_title"] = j["bot_next_step_success_title"]
+                            obj_list = list()
+                            if len(j["objectives"]) != 0:
+                                for objective in j["objectives"]:
+                                    x = {
+                                        "Id": objective["Id"],
+                                        "Title": objective["Title"]
+                                    }
+                                    obj_list.append(x)
 
-                        print('\n This i in dialog_submission =', i, '\n')
-                        i['focus'] = slack_payload['submission']['meal_preferences']
-                        print('slack_payload in oredr= ', slack_payload['submission']['meal_preferences'], '\n')
-                        print('\n This i in dialog_submission +  meal_preferences =', i, '\n')
-                        print('USER_ORDER All + i[focus]= ', USER_ORDER)
-                        r.set("USER_ORDER", json.dumps(USER_ORDER))
-                        # USER_INFO.append(
-                        #     {
-                        #         "slack_client_id": i['slack_client_id'],
-                        #         "slack_channel_id": i["slack_channel_id"],
-                        #         "completed_bot_step": 2,
-                        #         "text": i['bot_next_step_success_title']
-                        #     }
-                        # )
-                        # r.set('USER_INFO', json.dumps(USER_INFO))
+
+                            i["objectives"] = obj_list
+
+                            print('\n This i in dialog_submission =', i, '\n')
+                            i['focus'] = slack_payload['submission']['meal_preferences']
+                            print('slack_payload in oredr= ', slack_payload['submission']['meal_preferences'], '\n')
+                            print('\n This i in dialog_submission +  meal_preferences =', i, '\n')
+                            print('USER_ORDER All + i[focus]= ', USER_ORDER)
+                            r.set("USER_ORDER", json.dumps(USER_ORDER))
+                            # USER_INFO.append(
+                            #     {
+                            #         "slack_client_id": i['slack_client_id'],
+                            #         "slack_channel_id": i["slack_channel_id"],
+                            #         "completed_bot_step": 2,
+                            #         "text": i['bot_next_step_success_title']
+                            #     }
+                            # )
+                            # r.set('USER_INFO', json.dumps(USER_INFO))
 
             elif slack_payload['callback_id'] == 'Objective':
                 print('\n i in Objective =', i, '\n')
