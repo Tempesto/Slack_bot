@@ -162,15 +162,16 @@ def post_message():
                         "bot_next_step_success_title": i['bot_next_step_success_title'],
                         "objectives": i["objectives"]
                     })
-                USER_INFO.append(
-                    {
-                        "slack_client_id": i['slack_client_id'],
-                        "slack_channel_id": order_dm["channel"],
-                        "message": order_dm["message"]["text"],
-                        "completed_bot_step": 4,
-                        "response": order_dm['ok'],
-                    }
-                )
+                print('USER_ORDER ===', USER_ORDER)
+                # USER_INFO.append(
+                #     {
+                #         "slack_client_id": i['slack_client_id'],
+                #         "slack_channel_id": order_dm["channel"],
+                #         "message": order_dm["message"]["text"],
+                #         "completed_bot_step": 4,
+                #         "response": order_dm['ok'],
+                #     }
+                # )
             elif i['bot_step_id'] == 7:
                 order_dm = WebClient(i['slack_access_token']).chat_delete(
                     channel=i['slack_channel_id'],
@@ -179,7 +180,7 @@ def post_message():
         print('Save USER_ORDER')
         r.set('USER_ORDER', json.dumps(USER_ORDER))
         print('Save USER_ORDER OK')
-        r.set('USER_INFO', json.dumps(USER_INFO))
+        # r.set('USER_INFO', json.dumps(USER_INFO))
         threading.Timer(60, post_message).start()
         print("End of post_message")
 
