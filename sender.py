@@ -1,21 +1,17 @@
 from slackeventsapi import SlackEventAdapter
 from slack import WebClient, RTMClient
-from config import SLACK_SIGNING_SECRET, SLACK_SIGNING_SECRET_TO_ADD_USERS, TOKENB, TOKENP, MINUTE, HOUR, \
-    DAY_OF_WEEK, SLACK_CLIENT_ID, BOT_ID, GET, POST, COLLBACK
+from config import SLACK_SIGNING_SECRET, SLACK_SIGNING_SECRET_TO_ADD_USERS, TOKENB, SLACK_CLIENT_ID, BOT_ID, GET, POST, COLLBACK
 import redis
 import requests
 
-from celery import Celery
-from celery.schedules import crontab
 
 import json
 from flask import request, make_response, Flask, render_template, redirect
-import threading
 
 app = Flask(__name__)
 
-cel = Celery('redis_start', broker='redis://localhost:6379//', backend='redis', )
-cel.conf.enable_utc = False
+# cel = Celery('redis_start', broker='redis://localhost:6379//', backend='redis', )
+# cel.conf.enable_utc = False
 
 slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events")
 client = WebClient(TOKENB)
@@ -24,8 +20,6 @@ user_id = 'ULJ4829LL'
 USER_ORDER = []
 USER_INFO = []
 r = redis.StrictRedis()
-# post message for users
-# @cel.task
 
 
 
@@ -33,11 +27,8 @@ def postMessage_test():
     print("Start postMessage")
     print("GET =", GET)
     print("BOT_ID =", BOT_ID)
-  
-   
     response = requests.get(GET+BOT_ID)
     responseJson = response.json()
-
     print('Data ==== ', responseJson['data'])
     if len(responseJson['data']) != 0:
         for i in responseJson['data']:
@@ -73,13 +64,10 @@ def postMessage_test():
                 USER_ORDER.append(
                     {
                         "bot_uniq_id": 'UMQCJQ41Y',
-                        # "completed_bot_step": None,
                         "bot_schedule_id": i['bot_schedule_id'],
                         "slack_client_id": i['slack_client_id'],
                         "slack_channel_id": order_dm["channel"],
                         "slack_ts": order_dm["ts"],
-                        # "message": order_dm["message"]["text"],
-                        # "ts": order_dm["ts"],
                         "focus": '',
                         "slack_access_token": i['slack_access_token'],
                         "bot_step_title": i['bot_step_title'],
@@ -101,56 +89,12 @@ def postMessage_test():
                             "slack_client_id": i['slack_client_id'],
                             "slack_ts": order_dm["ts"],
                             "data": {
-
                                 "focus_title": "",
                                 "objective_id": None
                             }
                         }
                     ]
                 requests.post(POST, data=json.dumps(MESSAGE_SERVER))
-
-
-            # elif i['bot_step_id'] == 2:
-            #     print('i=', i)
-            #     print('channel', i['slack_channel_id'])
-            #     USER_ORDER.append(
-            #         {
-            #             "bot_uniq_id": 'UMQCJQ41Y',
-            #             "completed_bot_step": 'None',
-            #             "bot_schedule_id": i['bot_schedule_id'],
-            #             "slack_client_id": i['slack_client_id'],
-            #             "slack_channel_id": i['slack_channel_id'],
-            #             "slack_ts": i['slack_ts'],
-            #             # "ts": i['slack_ts'],
-            #             "focus": '',
-            #             "slack_access_token": i['slack_access_token'],
-            #             "bot_step_title": i['bot_step_title'],
-            #             "bot_next_step_success_title": i['bot_next_step_success_title'],
-            #             "objectives": i["objectives"]
-            #         })
-            #     USER_INFO.append(
-            #         {
-            #             "slack_client_id": i['slack_client_id'],
-            #             "slack_channel_id": i["slack_channel_id"],
-            #             "message": i['bot_step_title']
-            #         }
-            #     )
-            #     # MESSAGE_SERVER= [
-            #     #         {
-            #     #             "bot_uniq_id":'UMQCJQ41Y',
-            #     #             "completed_bot_step": 1,
-            #     #             "bot_schedule_id": i["bot_schedule_id"],
-            #     #             "response": true,
-            #     #             "slack_client_id": i['slack_client_id'],
-            #     #             "slack_ts": order_dm["ts"],
-            #     #             "data": {
-            #     #
-            #     #                 "focus_title": "",
-            #     #                 "objective_id": null
-            #     #             }
-            #     #         }
-            #     #     ]
-
             elif i['bot_step_id'] == 5 or i['bot_step_id'] == 6:
                 if i['bot_step_id'] == 5:
                     response_mess(i, 5)
@@ -196,7 +140,7 @@ def postMessage_test():
                         }
                     }
                 ]
-                requests.post(POST, data = json.dumps(MESSAGE_SERVER))
+                requests.post(POST, data=json.dumps(MESSAGE_SERVER))
                 USER_ORDER.append(
                     {
                         "bot_uniq_id": 'UMQCJQ41Y',
@@ -205,8 +149,6 @@ def postMessage_test():
                         "slack_client_id": i['slack_client_id'],
                         "slack_channel_id": order_dm["channel"],
                         "slack_ts": order_dm["ts"],
-                        # "message": order_dm["message"]["text"],
-                        # "ts": order_dm["ts"],
                         "focus": '',
                         "slack_access_token": i['slack_access_token'],
                         "bot_step_title": i['bot_step_title'],
@@ -227,11 +169,6 @@ def postMessage_test():
                     channel=i['slack_channel_id'],
                     ts=i['slack_ts']
                 )
-
-
-                # print('USER_ORDER in step 4 ====', USER_ORDER)
-        # print('USER_ORDER  = == = = ', USER_ORDER)
-
     r.set('USER_ORDER', json.dumps(USER_ORDER))
     r.set('USER_INFO', json.dumps(USER_INFO))
 
@@ -253,7 +190,6 @@ def response_mess(i, id_issue):
                     "text": {
                         "type": "plain_text",
                         "text": "Send focus",
-                        # "emoji": true
                     },
                     "value": "focus"
                 }
@@ -268,9 +204,8 @@ def response_mess(i, id_issue):
             "slack_channel_id":i["slack_channel_id"],
             "slack_ts": i['slack_ts'],
             "data": {
-
                 "focus_title": "",
-                "objective_id": null
+                "objective_id": None
             }
         }
     ]
@@ -305,41 +240,7 @@ def response_mess(i, id_issue):
     r.set('USER_INFO', json.dumps(USER_INFO))
 
 
-# Configurate send message
-# cel.conf.beat_schedule = {
-#     'send massage user': {
-#         'task': 'sender.postMessage',
-#         'schedule': crontab(day_of_week=DAY_OF_WEEK, hour=HOUR, minute=MINUTE),
-#     },
-# }
 
-
-# @slack_events_adapter.on("message")
-# def hendel_message(event_data):
-#     print("Event = ", event_data, '\n')
-#     message = event_data["event"]
-#     print("message === ", message, '\n')
-#     print('message channel =', message['channel'])
-#     # client.users_info(
-#     #     user='ULMA7FEMR'
-#     # )
-#     a = WebClient('xoxp-739261532001-747828510118-750197367735-f1e51021592f76995afaccd61adcd29b').users_identity(
-#
-#     )
-#     print("a=", a)
-#
-#     text_user = message['text']
-#     if message.get("subtype") is None and "focus" in text_user:
-#         channel = message["channel"]
-#         # send_message = "YA"
-#         response = client.chat_postMessage(
-#             channel=channel,
-#             text='Hi',
-#             attachments= ''
-#         )
-#         print(response)
-#         assert response["ok"]
-#
 authed_teams = {}
 
 
@@ -361,7 +262,6 @@ def add():
     authed_teams[team_id] = {
         "bot_token": auth_response["bot"]["bot_access_token"]
     }
-    # RTMClient(authed_teams[team_id]["bot_token"])
     tok = auth_response['access_token']
     us = auth_response['user_id']
     client_data = client.users_info(
@@ -421,11 +321,7 @@ def respond():
 
 
             elif slack_payload['actions'][0]['value'] == 'Objective':
-                # print('slack_payload slack_ts =', slack_payload['container']["slack_ts"])
                 if slack_payload['container']['channel_id'] == i['slack_channel_id']:
-                    # sql = f"SELECT parent_id, company_id, item_type, description FROM items where company_id={i[1]['company_id']} and title='objective'"
-                    # data = sql_query(sql)
-                    # print('\n data in Objective =', data)
                     a = []
                     for objectives in i['objectives']:
                         print('objectives===', objectives)
@@ -446,25 +342,6 @@ def respond():
                                     "name": "meal_preferences",
                                     "placeholder": "",
                                     "options": a
-                                    # "options":
-                                    #     [
-                                    #     {
-                                    #         "label": "Cappuccino",
-                                    #         "value": "1"
-                                    #     },
-                                    #     {
-                                    #         "label": "Latte",
-                                    #         "value": "2"
-                                    #     },
-                                    #     {
-                                    #         "label": "Pour Over",
-                                    #         "value": "3"
-                                    #     },
-                                    #     {
-                                    #         "label": "Cold Brew",
-                                    #         "value": "4"
-                                    #     }
-                                    # ]
                                 }
                             ]
                         }
@@ -485,7 +362,7 @@ def respond():
                             "data": {
 
                                 "focus_title": slack_payload['submission']['meal_preferences'],
-                                "objective_id": null
+                                "objective_id": None
                             }
                         }
                     ]
@@ -514,13 +391,9 @@ def respond():
                         ],
                         attachments=''
                     )
-                    #сюда вставить запрос на сервер
                     client_data = requests.get(GET+BOT_ID)
                     data = json(client_data)
                     print("DATA SERVER ++++", data)
-                    # if data['slack_channel_id'] == i['slack_channel_id']:
-                    # i["bot_uniq_id"] = data["bot_uniq_id"]
-                    # i["completed_bot_step"] = data["completed_bot_step"]
                     i["bot_schedule_id"] = data["bot_schedule_id"]
                     i["slack_client_id"] = data["slack_client_id"]
                     i["slack_channel_id"] = data["slack_channel_id"]
@@ -534,7 +407,6 @@ def respond():
                     i['focus'] = slack_payload['submission']['meal_preferences']
                     print('slack_payload in oredr= ', slack_payload['submission']['meal_preferences'], '\n')
                     print('\n This i in dialog_submission +  meal_preferences =', i, '\n')
-                    # USER_ORDER[i]['focus':slack_payload['submission']['meal_preferences']]
                     print('USER_ORDER All + i[focus]= ', USER_ORDER)
                     r.set("USER_ORDER", json.dumps(USER_ORDER))
                     USER_INFO.append(
@@ -546,8 +418,6 @@ def respond():
                         }
                     )
                     r.set('USER_INFO', json.dumps(USER_INFO))
-                    # timer3.start()
-                    # print("timer3 start \n")
 
             elif slack_payload['callback_id'] == 'Objective':
                 print('\n i in Objective =', i, '\n')
@@ -596,18 +466,6 @@ def respond():
                             }
                     ]
                     requests.post(POST, data=json.dumps(MESSAGE_SERVER))
-                    # maks_data = [{"user_id": i[0], "company_id": i[1]['company_id'], "focus": i[1]['focus'], 'Objective': slack_payload['submission']['meal_preferences']}]
-                    # r.set('Maks', json.dumps(maks_data))
-                    # print(r.get('Maks'))
-                    # USER_INFO.append(
-                    #     {
-                    #         "slack_client_id": i['slack_client_id'],
-                    #         "slack_channel_id": i["slack_channel_id"],
-                    #         "completed_bot_step": 3,
-                    #         "text":
-                    #     }
-                    # )
-                    # r.set('USER_INFO', json.dumps(USER_INFO))
 
     print("End of /after_button \n")
     return make_response("", 200)
