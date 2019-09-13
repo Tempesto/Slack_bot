@@ -314,218 +314,215 @@ def add():
 def respond():
     print("Start after_button")
     redis_keys = r.keys()
-    print("redis_keys = = = ",redis_keys)
 
-    for key in r.scan_iter(match='user'):
-        print("key = = = = = = ",key)
+    for key in redis_keys:
+        if "user_" in key:
+            USER = json.loads(r.get(key).decode('utf-8'))
+            slack_payload = json.loads(request.form.get("payload"))
+            print('\n USER_ORDER in start foo= ', USER, '\n')
+            print('\n slack_payload in start foo=', slack_payload, '\n')
 
-
-    USER_ORDER = json.loads(r.get('USER_ORDER').decode('utf-8'))
-    slack_payload = json.loads(request.form.get("payload"))
-    print('\n USER_ORDER in start foo= ', USER_ORDER, '\n')
-    print('\n slack_payload in start foo=', slack_payload, '\n')
-    for i in USER_ORDER:
-        print("\n i in for=", i, '\n')
-        if slack_payload['type'] == 'block_actions':
-            print(" if slack_payload['type'] == 'block_actions':")
-            if slack_payload['actions'][0]['value'] == 'focus':
-                print('slack_payload["trigger_id"]= ', slack_payload['trigger_id'])
-                if slack_payload['container']['channel_id'] == i['slack_channel_id']:
-                    print("focus if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
-                    WebClient(i['slack_access_token']).dialog_open(
-                        type='section',
-                        text='Focus',
-                        trigger_id=slack_payload['trigger_id'],
-                        dialog={
-                            "title": "Focus ",
-                            "submit_label": "Submit",
-                            "callback_id": "focus",
-                            "elements": [
-                                {
-                                    "label": "Send your focus",
-                                    "type": "text",
-                                    "name": "meal_preferences",
-                                    "placeholder": "",
-                                }
-                            ]
-                        }
-                    )
-
-
-
-            elif slack_payload['actions'][0]['value'] == 'Objective':
-                print("elif slack_payload['actions'][0]['value'] == 'Objective':")
-                if slack_payload['container']['channel_id'] == i['slack_channel_id']:
-                    print("Objective if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
-                    a = []
-                    for objective in i['objectives']:
-                        print('objectives===', objective)
-                        a.append({
-                            "label": objective["Title"],
-                            "value": objective["Id"]
-                        })
-                    WebClient(i['slack_access_token']).dialog_open(
-                        trigger_id=slack_payload['trigger_id'],
-                        dialog={
-                            "title": "Focus ",
-                            "submit_label": "Submit",
-                            "callback_id": "Objective",
-                            "elements": [
-                                {
-                                    "label": "Select your Objective",
-                                    "type": "select",
-                                    "name": "meal_preferences",
-                                    "placeholder": "",
-                                    "options": a
-                                }
-                            ]
-                        }
-                    )
-
-        elif slack_payload['type'] == 'dialog_submission':
-            print("elif slack_payload['type'] == 'dialog_submission':")
-            if slack_payload['callback_id'] == 'focus':
-                if slack_payload['channel']['id'] == i['slack_channel_id']:
-                    print(" if slack_payload['channel']['id'] == i['slack_channel_id']:")
-                    MESSAGE_SERVER = {
-                            "bot_uniq_id": BOT_ID,
-                            "completed_bot_step": 1,
-                            "bot_schedule_id": int(i["bot_schedule_id"]),
-                            "slack_client_id": i['slack_client_id'],
-                            "slack_channel_id":i['slack_channel_id'],
-                            "slack_ts": i['slack_ts'],
-                            "data": {
-
-                                "focus_title": slack_payload['submission']['meal_preferences'],
-                                "objective_id": None
+            if slack_payload['type'] == 'block_actions':
+                print(" if slack_payload['type'] == 'block_actions':")
+                if slack_payload['actions'][0]['value'] == 'focus':
+                    print('slack_payload["trigger_id"]= ', slack_payload['trigger_id'])
+                    if slack_payload['container']['channel_id'] == USER['slack_channel_id']:
+                        print("focus if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
+                        WebClient(USER['slack_access_token']).dialog_open(
+                            type='section',
+                            text='Focus',
+                            trigger_id=slack_payload['trigger_id'],
+                            dialog={
+                                "title": "Focus ",
+                                "submit_label": "Submit",
+                                "callback_id": "focus",
+                                "elements": [
+                                    {
+                                        "label": "Send your focus",
+                                        "type": "text",
+                                        "name": "meal_preferences",
+                                        "placeholder": "",
+                                    }
+                                ]
                             }
-                        }
-                    print("MESSAGE_SERVER =",MESSAGE_SERVER)
-                    response_client_data = requests.post(POST, json=MESSAGE_SERVER)
-                    client_data_dict = json.loads(response_client_data.text)
-                    print("ОТВЕТ на пост тект", client_data_dict)
-                    client_data_list = client_data_dict['data']
-                    print("ОТВЕТ на пост лист= ", client_data_list)
+                        )
 
-                    WebClient(i['slack_access_token']).chat_update(
-                        channel=i["slack_channel_id"],
-                        ts=i["slack_ts"],
-                        blocks=
-                        [
-                            {
-                                "type": "section",
-                                "text": {
-                                    "type": "mrkdwn",
-                                    "text": i['bot_next_step_success_title']
-                                },
-                                "accessory": {
-                                    "type": "button",
-                                    "text": {
-                                        "type": "plain_text",
-                                        "text": "Select Objective",
-                                    },
-                                    "value": "Objective"
-                                }
+
+
+                elif slack_payload['actions'][0]['value'] == 'Objective':
+                    print("elif slack_payload['actions'][0]['value'] == 'Objective':")
+                    if slack_payload['container']['channel_id'] == USER['slack_channel_id']:
+                        print("Objective if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
+                        a = []
+                        for objective in USER['objectives']:
+                            print('objectives===', objective)
+                            a.append({
+                                "label": objective["Title"],
+                                "value": objective["Id"]
+                            })
+                        WebClient(USER['slack_access_token']).dialog_open(
+                            trigger_id=slack_payload['trigger_id'],
+                            dialog={
+                                "title": "Focus ",
+                                "submit_label": "Submit",
+                                "callback_id": "Objective",
+                                "elements": [
+                                    {
+                                        "label": "Select your Objective",
+                                        "type": "select",
+                                        "name": "meal_preferences",
+                                        "placeholder": "",
+                                        "options": a
+                                    }
+                                ]
                             }
-                        ],
-                        attachments=''
-                    )
-                    # client_data = requests.get(GET + BOT_ID)
-                    # data = client_data.json()
+                        )
 
-                    if len(client_data_list) != 0:
-                        for j in client_data_list:
-                            i["bot_schedule_id"] = str(j["bot_schedule_id"])
-                            i["slack_client_id"] = j["slack_client_id"]
-                            i["slack_channel_id"] = j["slack_channel_id"]
-                            i["slack_ts"] = j["slack_ts"]
-                            i["slack_access_token"] = j["slack_access_token"]
-                            i["bot_step_title"] = str(j["bot_step_title"])
-                            i["bot_next_step_success_title"] = j["bot_next_step_success_title"]
-                            # obj_list = list()
-                            # if len(j["objectives"]) != 0:
-                            #     for objective in j["objectives"]:
-                            #         x = {
-                            #             "Id": objective["Id"],
-                            #             "Title": objective["Title"]
-                            #         }
-                            #         obj_list.append(x)
-                            #
-                            #
-                            # i["objectives"] = obj_list
-
-                            print('\n This i in dialog_submission =', i, '\n')
-                            i['focus'] = slack_payload['submission']['meal_preferences']
-                            print('slack_payload in oredr= ', slack_payload['submission']['meal_preferences'], '\n')
-                            print('\n This i in dialog_submission +  meal_preferences =', i, '\n')
-                            print('USER_ORDER All + i[focus]= ', USER_ORDER)
-                            redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
-                            r.set(redis_user_key, json.dumps(user_data_dict))
-
-                            print('user_data_dict454', user_data_dict)
-                            # USER_INFO.append(
-                            #     {
-                            #         "slack_client_id": i['slack_client_id'],
-                            #         "slack_channel_id": i["slack_channel_id"],
-                            #         "completed_bot_step": 2,
-                            #         "text": i['bot_next_step_success_title']
-                            #     }
-                            # )
-                            # r.set('USER_INFO', json.dumps(USER_INFO))
-
-            elif slack_payload['callback_id'] == 'Objective':
-                print('\n i in Objective =', i, '\n')
-                if slack_payload['channel']['id'] == i['slack_channel_id']:
-                    MESSAGE_SERVER = {
+            elif slack_payload['type'] == 'dialog_submission':
+                print("elif slack_payload['type'] == 'dialog_submission':")
+                if slack_payload['callback_id'] == 'focus':
+                    if slack_payload['channel']['id'] == USER['slack_channel_id']:
+                        print(" if slack_payload['channel']['id'] == i['slack_channel_id']:")
+                        MESSAGE_SERVER = {
                                 "bot_uniq_id": BOT_ID,
-                                "completed_bot_step": 2,
-                                "bot_schedule_id": int(i["bot_schedule_id"]),
-                                "slack_client_id": i['slack_client_id'],
-                                "slack_channel_id":i['slack_channel_id'],
-                                "slack_ts": i['slack_ts'],
+                                "completed_bot_step": 1,
+                                "bot_schedule_id": int(USER["bot_schedule_id"]),
+                                "slack_client_id": USER['slack_client_id'],
+                                "slack_channel_id":USER['slack_channel_id'],
+                                "slack_ts": USER['slack_ts'],
                                 "data": {
 
-                                    "focus_title": i['focus'],
-                                    "objective_id": int(slack_payload['submission']['meal_preferences'])
-                                }
-                            }
-                    print("MESSAGE_SERVER in end", MESSAGE_SERVER)
-                    reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
-                    print("reply from post =", reply_from_post.text)
-                    this_respons_text = json.loads(reply_from_post.text)
-                    print("this_respons_text =", this_respons_text)
-                    this_respons_data = this_respons_text['data']
-                    print("this_respons_data =", this_respons_data[0])
-                    WebClient(i['slack_access_token']).chat_update(
-                        channel=i['slack_channel_id'],
-                        ts=i['slack_ts'],
-                        blocks=[{
-                            "type": "section",
-                            "text": {
-                                "type": "mrkdwn",
-                                "text": i["bot_next_step_success_title"]
-                            }}],
-                        attachments=''
-                    )
-                    MESSAGE_SERVER = [
-                        {
-                                "bot_uniq_id": BOT_ID,
-                                "completed_bot_step": 3,
-                                "bot_schedule_id": i["bot_schedule_id"],
-                                "slack_channel_id": i["slack_channel_id"],
-                                "slack_client_id": i['slack_client_id'],
-                                "slack_ts": i['slack_ts'],
-                                "data": {
-
-                                    "focus_title": "",
+                                    "focus_title": slack_payload['submission']['meal_preferences'],
                                     "objective_id": None
                                 }
                             }
-                    ]
-                    requests.post(POST, json=MESSAGE_SERVER)
+                        print("MESSAGE_SERVER =",MESSAGE_SERVER)
+                        response_client_data = requests.post(POST, json=MESSAGE_SERVER)
+                        client_data_dict = json.loads(response_client_data.text)
+                        print("ОТВЕТ на пост тект", client_data_dict)
+                        client_data_list = client_data_dict['data']
+                        print("ОТВЕТ на пост лист= ", client_data_list)
 
-    print("End of /after_button \n")
-    return make_response("", 200)
+                        WebClient(USER['slack_access_token']).chat_update(
+                            channel=USER["slack_channel_id"],
+                            ts=USER["slack_ts"],
+                            blocks=
+                            [
+                                {
+                                    "type": "section",
+                                    "text": {
+                                        "type": "mrkdwn",
+                                        "text": USER['bot_next_step_success_title']
+                                    },
+                                    "accessory": {
+                                        "type": "button",
+                                        "text": {
+                                            "type": "plain_text",
+                                            "text": "Select Objective",
+                                        },
+                                        "value": "Objective"
+                                    }
+                                }
+                            ],
+                            attachments=''
+                        )
+                        # client_data = requests.get(GET + BOT_ID)
+                        # data = client_data.json()
+
+                        if len(client_data_list) != 0:
+                            for j in client_data_list:
+                                USER["bot_schedule_id"] = str(j["bot_schedule_id"])
+                                USER["slack_client_id"] = j["slack_client_id"]
+                                USER["slack_channel_id"] = j["slack_channel_id"]
+                                USER["slack_ts"] = j["slack_ts"]
+                                USER["slack_access_token"] = j["slack_access_token"]
+                                USER["bot_step_title"] = str(j["bot_step_title"])
+                                USER["bot_next_step_success_title"] = j["bot_next_step_success_title"]
+                                # obj_list = list()
+                                # if len(j["objectives"]) != 0:
+                                #     for objective in j["objectives"]:
+                                #         x = {
+                                #             "Id": objective["Id"],
+                                #             "Title": objective["Title"]
+                                #         }
+                                #         obj_list.append(x)
+                                #
+                                #
+                                # i["objectives"] = obj_list
+
+
+                                USER['focus'] = slack_payload['submission']['meal_preferences']
+                                print('slack_payload in oredr= ', slack_payload['submission']['meal_preferences'], '\n')
+                                print('\n This i in dialog_submission +  meal_preferences =', USER, '\n')
+                                print('USER', USER)
+                                redis_user_key = "user_" + USER['slack_client_id'] + "_" + str(USER['bot_schedule_id'])
+                                r.set(redis_user_key, json.dumps(user_data_dict))
+                                r.set(redis_user_key, json.dumps(USER))
+
+                                print('USER454==', USER)
+                                # USER_INFO.append(
+                                #     {
+                                #         "slack_client_id": i['slack_client_id'],
+                                #         "slack_channel_id": i["slack_channel_id"],
+                                #         "completed_bot_step": 2,
+                                #         "text": i['bot_next_step_success_title']
+                                #     }
+                                # )
+                                # r.set('USER_INFO', json.dumps(USER_INFO))
+
+                elif slack_payload['callback_id'] == 'Objective':
+                    print('\n i in Objective =', USER, '\n')
+                    if slack_payload['channel']['id'] == USER['slack_channel_id']:
+                        MESSAGE_SERVER = {
+                                    "bot_uniq_id": BOT_ID,
+                                    "completed_bot_step": 2,
+                                    "bot_schedule_id": int(USER["bot_schedule_id"]),
+                                    "slack_client_id": USER['slack_client_id'],
+                                    "slack_channel_id":USER['slack_channel_id'],
+                                    "slack_ts": USER['slack_ts'],
+                                    "data": {
+
+                                        "focus_title": USER['focus'],
+                                        "objective_id": int(slack_payload['submission']['meal_preferences'])
+                                    }
+                                }
+                        print("MESSAGE_SERVER in end", MESSAGE_SERVER)
+                        reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
+                        print("reply from post =", reply_from_post.text)
+                        this_respons_text = json.loads(reply_from_post.text)
+                        print("this_respons_text =", this_respons_text)
+                        this_respons_data = this_respons_text['data']
+                        print("this_respons_data =", this_respons_data[0])
+                        WebClient(USER['slack_access_token']).chat_update(
+                            channel=USER['slack_channel_id'],
+                            ts=USER['slack_ts'],
+                            blocks=[{
+                                "type": "section",
+                                "text": {
+                                    "type": "mrkdwn",
+                                    "text": USER["bot_next_step_success_title"]
+                                }}],
+                            attachments=''
+                        )
+                        MESSAGE_SERVER = [
+                            {
+                                    "bot_uniq_id": BOT_ID,
+                                    "completed_bot_step": 3,
+                                    "bot_schedule_id": USER["bot_schedule_id"],
+                                    "slack_channel_id": USER["slack_channel_id"],
+                                    "slack_client_id": USER['slack_client_id'],
+                                    "slack_ts": USER['slack_ts'],
+                                    "data": {
+
+                                        "focus_title": "",
+                                        "objective_id": None
+                                    }
+                                }
+                        ]
+                        requests.post(POST, json=MESSAGE_SERVER)
+
+            print("End of /after_button \n")
+            return make_response("", 200)
 
 
 if __name__ == "__main__":
