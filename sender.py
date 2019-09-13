@@ -478,6 +478,7 @@ def respond():
                                 }
                             }
                     ]
+                    print("MESSAGE_SERVER in end", MESSAGE_SERVER)
                     reply_from_post=requests.post(POST, data=json.dumps(MESSAGE_SERVER))
                     print("reply from post =", reply_from_post)
                     this_respons_text = json.loads(reply_from_post.text)
