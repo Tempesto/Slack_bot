@@ -217,25 +217,25 @@ def response_mess(i, id_issue):
                 }
             }]
     )
-    MESSAGE_SERVER = {
-            "bot_uniq_id": BOT_ID,
-            "completed_bot_step": id_issue,
-            "bot_schedule_id": int(i["bot_schedule_id"]),
-            "slack_client_id": i['slack_client_id'],
-            "slack_channel_id": i["slack_channel_id"],
-            "slack_ts": i['slack_ts'],
-            "data": {
-                "focus_title": None,
-                "objective_id": None
-            }
-        }
-
-
-    reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
-    print("reply from post =", reply_from_post.text)
-    this_respons_text = json.loads(reply_from_post.text)
-    print("this_respons_text =", this_respons_text)
-    this_respons_data = this_respons_text['data']
+    # MESSAGE_SERVER = {
+    #         "bot_uniq_id": BOT_ID,
+    #         "completed_bot_step": id_issue,
+    #         "bot_schedule_id": int(i["bot_schedule_id"]),
+    #         "slack_client_id": i['slack_client_id'],
+    #         "slack_channel_id": i["slack_channel_id"],
+    #         "slack_ts": i['slack_ts'],
+    #         "data": {
+    #             "focus_title": None,
+    #             "objective_id": None
+    #         }
+    #     }
+    #
+    #
+    # reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
+    # print("reply from post =", reply_from_post.text)
+    # this_respons_text = json.loads(reply_from_post.text)
+    # print("this_respons_text =", this_respons_text)
+    # this_respons_data = this_respons_text['data']
 
     user_data_dict = {
             "bot_uniq_id": BOT_ID,
@@ -268,10 +268,10 @@ def response_mess(i, id_issue):
         }
     )
 
-    redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
-    r.set(redis_user_key, json.dumps(user_data_dict))
-    print("user_data_dict261", user_data_dict)
-    r.set('USER_INFO', json.dumps(USER_INFO))
+    # redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
+    # r.set(redis_user_key, json.dumps(user_data_dict))
+    # print("user_data_dict261", user_data_dict)
+    # r.set('USER_INFO', json.dumps(USER_INFO))
 
 
 
