@@ -479,12 +479,12 @@ def respond():
                             }
                     ]
                     print("MESSAGE_SERVER in end", MESSAGE_SERVER)
-                    reply_from_post=requests.post(POST, json=json.dumps(MESSAGE_SERVER))
-                    print("reply from post =", reply_from_post)
+                    reply_from_post=requests.post(POST, json=MESSAGE_SERVER)
+                    print("reply from post =", reply_from_post.text)
                     this_respons_text = json.loads(reply_from_post.text)
                     print("this_respons_text =", this_respons_text)
                     this_respons_data = this_respons_text['data']
-                    print("this_respons_data =", this_respons_data)
+                    print("this_respons_data =", this_respons_data[0])
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i['slack_channel_id'],
                         ts=i['slack_ts'],
@@ -511,7 +511,7 @@ def respond():
                                 }
                             }
                     ]
-                    requests.post(POST, json=json.dumps(MESSAGE_SERVER))
+                    requests.post(POST, json=MESSAGE_SERVER)
 
     print("End of /after_button \n")
     return make_response("", 200)
