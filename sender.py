@@ -20,8 +20,9 @@ client = WebClient(TOKENB)
 user_id = 'ULJ4829LL'
 USER_ORDER = []
 USER_INFO = []
-r = redis.StrictRedis()
-
+# r = redis.StrictRedis()
+r = redis.Redis(host='127.0.0.1', port=6379, db=0)
+r.set('foo', 'bar')
 
 def post_message():
     print("Start postMessage")
