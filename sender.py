@@ -73,12 +73,12 @@ def post_message():
                         "slack_access_token": i['slack_access_token'],
                         "bot_step_title": i['bot_step_title'],
                         "bot_next_step_success_title": i['bot_next_step_success_title'],
-                        "objectives": [
-                            {
-                                str(i["objectives"][0]["Id"]),
-                                i["objectives"][0]["Title"]
-                            }
-                        ]
+                        "objectives": []
+                        #     {
+                        #         str(i["objectives"][0]["Id"]),
+                        #         i["objectives"][0]["Title"]
+                        #     }
+                        # ]
 
                     })
                 USER_INFO.append(
@@ -344,8 +344,8 @@ def respond():
                     for objectives in i['objectives']:
                         print('objectives===', objectives)
                         a.append({
-                            "label": objectives["Title"],
-                            "value": objectives["Id"]
+                            "label": objectives[0]["Title"],
+                            "value": objectives[0]["Id"]
                         })
                     WebClient(i['slack_access_token']).dialog_open(
                         trigger_id=slack_payload['trigger_id'],
@@ -410,14 +410,19 @@ def respond():
                     client_data = requests.get(GET + BOT_ID)
                     data = client_data.json()
                     print("DATA SERVER ++++", data)
-                    i["bot_schedule_id"] = data["bot_schedule_id"]
+                    i["bot_schedule_id"] = str(data["bot_schedule_id"])
                     i["slack_client_id"] = data["slack_client_id"]
                     i["slack_channel_id"] = data["slack_channel_id"]
                     i["slack_ts"] = data["slack_ts"]
                     i["slack_access_token"] = data["slack_access_token"]
-                    i["bot_step_title"] = data["bot_step_title"]
+                    i["bot_step_title"] = str(data["bot_step_title"])
                     i["bot_next_step_success_title"] = data["bot_next_step_success_title"]
-                    i["objectives"] = data["objectives"]
+                    i["objectives"] = [
+                        {
+                            str(data["objectives"][0]["Id"]),
+                            data["objectives"][0]["Title"]
+                        }
+                    ]
 
                     print('\n This i in dialog_submission =', i, '\n')
                     i['focus'] = slack_payload['submission']['meal_preferences']
