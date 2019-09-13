@@ -375,8 +375,7 @@ def respond():
             if slack_payload['callback_id'] == 'focus':
                 if slack_payload['channel']['id'] == i['slack_channel_id']:
                     print(" if slack_payload['channel']['id'] == i['slack_channel_id']:")
-                    MESSAGE_SERVER = [
-                        {
+                    MESSAGE_SERVER = {
                             "bot_uniq_id": BOT_ID,
                             "completed_bot_step": 1,
                             "bot_schedule_id": str(i["bot_schedule_id"]),
@@ -389,8 +388,8 @@ def respond():
                                 "objective_id": None
                             }
                         }
-                    ]
-                    client_data = requests.post(POST, data=json.dumps(MESSAGE_SERVER))
+
+                    client_data = requests.post(POST, json=MESSAGE_SERVER)
                     print("client_data ===", client_data)
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i["slack_channel_id"],
@@ -417,7 +416,7 @@ def respond():
                     )
                     # client_data = requests.get(GET + BOT_ID)
                     # data = client_data.json()
-                    if len(client_data) != 0:
+                    if len(client_data['data']) != 0:
                         print("DATA SERVER ++++", client_data)
                         i["bot_schedule_id"] = str(client_data["bot_schedule_id"])
                         i["slack_client_id"] = client_data["slack_client_id"]
