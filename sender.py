@@ -69,8 +69,7 @@ def post_message():
                         "Title": j["Title"]
                     }
                     obj_list.append(x)
-                USER_ORDER.append(
-                    {
+                user_data_dict = {
                         "bot_uniq_id": BOT_ID,
                         "bot_schedule_id": int(i['bot_schedule_id']),
                         "slack_client_id": i['slack_client_id'],
@@ -81,8 +80,9 @@ def post_message():
                         "bot_step_title": i['bot_step_title'],
                         "bot_next_step_success_title": i['bot_next_step_success_title'],
                         "objectives": obj_list
-                    })
-                print("USER_ORDER ===", USER_ORDER)
+                }
+
+                print("user_data_dict ===", user_data_dict)
                 USER_INFO.append(
                     {
                         "slack_client_id": i['slack_client_id'],
@@ -150,8 +150,7 @@ def post_message():
                     }
                 ]
                 requests.post(POST, data=json.dumps(MESSAGE_SERVER))
-                USER_ORDER.append(
-                    {
+                user_data_dict = {
                         "bot_uniq_id": BOT_ID,
                         "completed_bot_step": 'None',
                         "bot_schedule_id": i['bot_schedule_id'],
@@ -163,8 +162,8 @@ def post_message():
                         "bot_step_title": i['bot_step_title'],
                         "bot_next_step_success_title": i['bot_next_step_success_title'],
                         "objectives": i["objectives"]
-                    })
-                print('USER_ORDER ===', USER_ORDER)
+                    }
+                print('user_data_dict ===', user_data_dict)
                 # USER_INFO.append(
                 #     {
                 #         "slack_client_id": i['slack_client_id'],
@@ -179,10 +178,11 @@ def post_message():
                     channel=i['slack_channel_id'],
                     ts=i['slack_ts']
                 )
-        print('Save USER_ORDER')
-        r.set('USER_ORDER', json.dumps(USER_ORDER))
-        print("USER_ORDER184",USER_ORDER)
-        print('Save USER_ORDER OK')
+            print('Save user_data_dict')
+            redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
+            r.set(redis_user_key, json.dumps(user_data_dict))
+            print("redis_user_key",redis_user_key)
+            print('Save redis_user_key OK')
         # r.set('USER_INFO', json.dumps(USER_INFO))
     threading.Timer(60, post_message).start()
     print("End of post_message")
@@ -221,14 +221,13 @@ def response_mess(i, id_issue):
             "slack_channel_id":i["slack_channel_id"],
             "slack_ts": i['slack_ts'],
             "data": {
-                "focus_title": "",
+                "focus_title": None,
                 "objective_id": None
             }
         }
     ]
     requests.post(POST, data=json.dumps(MESSAGE_SERVER))
-    USER_ORDER.append(
-        {
+    user_data_dict = {
             "bot_uniq_id": BOT_ID,
             "completed_bot_step": None,
             "bot_schedule_id": str(i['bot_schedule_id']),
@@ -248,7 +247,7 @@ def response_mess(i, id_issue):
                     i["objectives"]["Title"]
                 }
             ]
-        })
+        }
     USER_INFO.append(
         {
             "slack_client_id": i['slack_client_id'],
@@ -258,8 +257,10 @@ def response_mess(i, id_issue):
             "response": order_dm['ok'],
         }
     )
-    r.set('USER_ORDER', json.dumps(USER_ORDER))
-    print("USER_ORDER261",USER_ORDER)
+
+    redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
+    r.set(redis_user_key, json.dumps(user_data_dict))
+    print("user_data_dict261", user_data_dict)
     r.set('USER_INFO', json.dumps(USER_INFO))
 
 
@@ -312,6 +313,13 @@ def add():
 @slack_events_adapter.server.route("/after_button", methods=["POST", "GET"])
 def respond():
     print("Start after_button")
+    redis_keys = r.keys()
+    print("redis_keys = = = ",redis_keys)
+
+    for key in r.scan_iter(match='user'):
+        print("key = = = = = = ",key)
+
+
     USER_ORDER = json.loads(r.get('USER_ORDER').decode('utf-8'))
     slack_payload = json.loads(request.form.get("payload"))
     print('\n USER_ORDER in start foo= ', USER_ORDER, '\n')
@@ -451,8 +459,10 @@ def respond():
                             print('slack_payload in oredr= ', slack_payload['submission']['meal_preferences'], '\n')
                             print('\n This i in dialog_submission +  meal_preferences =', i, '\n')
                             print('USER_ORDER All + i[focus]= ', USER_ORDER)
-                            r.set("USER_ORDER", json.dumps(USER_ORDER))
-                            print('USER_ORDER454', USER_ORDER)
+                            redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
+                            r.set(redis_user_key, json.dumps(user_data_dict))
+
+                            print('user_data_dict454', user_data_dict)
                             # USER_INFO.append(
                             #     {
                             #         "slack_client_id": i['slack_client_id'],
