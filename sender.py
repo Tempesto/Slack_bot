@@ -102,11 +102,11 @@ def post_message():
                             }
                         }
 
-                reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
-                print("reply from post =", reply_from_post.text)
-                this_respons_text = json.loads(reply_from_post.text)
-                print("this_respons_text =", this_respons_text)
-                this_respons_data = this_respons_text['data']
+                #                reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
+                #                print("reply from post =", reply_from_post.text)
+                #                this_respons_text = json.loads(reply_from_post.text)
+                #                print("this_respons_text =", this_respons_text)
+                #                this_respons_data = this_respons_text['data']
 
             elif i['bot_step_id'] == 5 or i['bot_step_id'] == 6:
                 if i['bot_step_id'] == 5:
