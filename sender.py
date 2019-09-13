@@ -388,7 +388,7 @@ def respond():
                                 "objective_id": None
                             }
                         }
-
+                    print("MESSAGE_SERVER =",MESSAGE_SERVER)
                     client_data = requests.post(POST, json=MESSAGE_SERVER)
                     print("client_data ===", client_data)
                     WebClient(i['slack_access_token']).chat_update(
