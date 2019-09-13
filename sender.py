@@ -181,8 +181,8 @@ def post_message():
         r.set('USER_ORDER', json.dumps(USER_ORDER))
         print('Save USER_ORDER OK')
         # r.set('USER_INFO', json.dumps(USER_INFO))
-        threading.Timer(60, post_message).start()
-        print("End of post_message")
+    threading.Timer(60, post_message).start()
+    print("End of post_message")
 
 
 
