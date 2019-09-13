@@ -26,8 +26,8 @@ r = redis.Redis(host='127.0.0.1', port=6379, db=0)
 
 def post_message():
     print("Start postMessage")
-    print("GET =", GET)
-    print("BOT_ID =", BOT_ID)
+    print("GET + BOT_ID=", GET + BOT_ID)
+    # print("BOT_ID =", BOT_ID)
     response = requests.get(GET+BOT_ID)
     responseJson = response.json()
     print('Data ==== ', responseJson['data'])
@@ -221,8 +221,8 @@ def response_mess(i, id_issue):
         {
             "bot_uniq_id": BOT_ID,
             "completed_bot_step": None,
-            "bot_schedule_id": i['bot_schedule_id'],
-            "bot_step_id": i["bot_step_id"],
+            "bot_schedule_id": str(i['bot_schedule_id']),
+            "bot_step_id": str(i["bot_step_id"]),
             "slack_client_id": i['slack_client_id'],
             "slack_channel_id": order_dm["channel"],
             "slack_ts": order_dm["ts"],
@@ -232,7 +232,12 @@ def response_mess(i, id_issue):
             "slack_access_token": i['slack_access_token'],
             "bot_step_title": i['bot_step_title'],
             "bot_next_step_success_title": i['bot_next_step_success_title'],
-            "objectives": i["objectives"]
+            "objectives": [
+                {
+                    str(i["objectives"]["Id"]),
+                    i["objectives"]["Title"]
+                }
+            ]
         })
     USER_INFO.append(
         {
