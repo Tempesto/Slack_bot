@@ -3,6 +3,7 @@ from slack import WebClient, RTMClient
 from config import SLACK_SIGNING_SECRET, SLACK_SIGNING_SECRET_TO_ADD_USERS, TOKENB, SLACK_CLIENT_ID, BOT_ID, GET, POST, COLLBACK
 import redis
 import requests
+import threading
 
 
 import json
@@ -21,7 +22,7 @@ USER_ORDER = []
 USER_INFO = []
 r = redis.StrictRedis()
 
-
+timer = threading.Timer(60, post_message())
 def post_message():
     print("Start postMessage")
     print("GET =", GET)
@@ -170,7 +171,9 @@ def post_message():
                 )
     r.set('USER_ORDER', json.dumps(USER_ORDER))
     r.set('USER_INFO', json.dumps(USER_INFO))
+    timer.start()
 
+timer = threading.Timer(60, post_message())
 
 def response_mess(i, id_issue):
     print("response_mess i ==", i)
