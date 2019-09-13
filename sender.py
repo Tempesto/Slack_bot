@@ -148,7 +148,7 @@ def post_message():
                 #         "slack_channel_id":i["slack_channel_id"],
                 #         "slack_ts": i['slack_ts'],
                 #         "data": {
-                # 
+                #
                 #             "focus_title": "",
                 #             "objective_id": None
                 #         }
@@ -186,7 +186,7 @@ def post_message():
                 )
             print('Save user_data_dict')
             redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
-            if i['bot_step_id'] == 5 or i['bot_step_id'] == 6 or i['bot_step_id'] == 7:
+            if i['bot_step_id'] == 4 or i['bot_step_id'] == 5 or i['bot_step_id'] == 6 or i['bot_step_id'] == 7:
                 continue
             else:
                 r.set(redis_user_key, json.dumps(user_data_dict))
@@ -368,6 +368,7 @@ def respond():
 
                 elif slack_payload['actions'][0]['value'] == 'Objective':
                     print("elif slack_payload['actions'][0]['value'] == 'Objective':")
+                    print("USER SLACK ID=", USER)
                     if slack_payload['container']['channel_id'] == USER['slack_channel_id']:
                         print("Objective if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
                         a = []
