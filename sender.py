@@ -474,7 +474,7 @@ def respond():
                                 "data": {
 
                                     "focus_title": i['focus'],
-                                    "objective_id": slack_payload['submission']['meal_preferences']
+                                    "objective_id": int(slack_payload['submission']['meal_preferences'])
                                 }
                             }
                     ]
