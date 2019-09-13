@@ -432,17 +432,17 @@ def respond():
                             i["slack_access_token"] = j["slack_access_token"]
                             i["bot_step_title"] = str(j["bot_step_title"])
                             i["bot_next_step_success_title"] = j["bot_next_step_success_title"]
-                            obj_list = list()
-                            if len(j["objectives"]) != 0:
-                                for objective in j["objectives"]:
-                                    x = {
-                                        "Id": objective["Id"],
-                                        "Title": objective["Title"]
-                                    }
-                                    obj_list.append(x)
-
-
-                            i["objectives"] = obj_list
+                            # obj_list = list()
+                            # if len(j["objectives"]) != 0:
+                            #     for objective in j["objectives"]:
+                            #         x = {
+                            #             "Id": objective["Id"],
+                            #             "Title": objective["Title"]
+                            #         }
+                            #         obj_list.append(x)
+                            #
+                            #
+                            # i["objectives"] = obj_list
 
                             print('\n This i in dialog_submission =', i, '\n')
                             i['focus'] = slack_payload['submission']['meal_preferences']
