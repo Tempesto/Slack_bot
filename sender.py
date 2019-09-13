@@ -72,7 +72,7 @@ def post_message():
                 USER_ORDER.append(
                     {
                         "bot_uniq_id": BOT_ID,
-                        "bot_schedule_id": str(i['bot_schedule_id']),
+                        "bot_schedule_id": int(i['bot_schedule_id']),
                         "slack_client_id": i['slack_client_id'],
                         "slack_channel_id": order_dm["channel"],
                         "slack_ts": order_dm["ts"],
@@ -181,6 +181,7 @@ def post_message():
                 )
         print('Save USER_ORDER')
         r.set('USER_ORDER', json.dumps(USER_ORDER))
+        print("USER_ORDER184",USER_ORDER)
         print('Save USER_ORDER OK')
         # r.set('USER_INFO', json.dumps(USER_INFO))
     threading.Timer(60, post_message).start()
@@ -258,6 +259,7 @@ def response_mess(i, id_issue):
         }
     )
     r.set('USER_ORDER', json.dumps(USER_ORDER))
+    print("USER_ORDER261",USER_ORDER)
     r.set('USER_INFO', json.dumps(USER_INFO))
 
 
@@ -450,6 +452,7 @@ def respond():
                             print('\n This i in dialog_submission +  meal_preferences =', i, '\n')
                             print('USER_ORDER All + i[focus]= ', USER_ORDER)
                             r.set("USER_ORDER", json.dumps(USER_ORDER))
+                            print('USER_ORDER454', USER_ORDER)
                             # USER_INFO.append(
                             #     {
                             #         "slack_client_id": i['slack_client_id'],
