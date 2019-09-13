@@ -90,20 +90,24 @@ def post_message():
                         "message": order_dm["message"]["text"]
                     }
                 )
-                MESSAGE_SERVER= [
-                        {
+                MESSAGE_SERVER= {
                             "bot_uniq_id": BOT_ID,
                             "completed_bot_step": None,
                             "bot_schedule_id": i["bot_schedule_id"],
                             "slack_client_id": i['slack_client_id'],
                             "slack_ts": order_dm["ts"],
                             "data": {
-                                "focus_title": "",
+                                "focus_title": None,
                                 "objective_id": None
                             }
                         }
-                    ]
-                requests.post(POST, data=json.dumps(MESSAGE_SERVER))
+
+                reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
+                print("reply from post =", reply_from_post.text)
+                this_respons_text = json.loads(reply_from_post.text)
+                print("this_respons_text =", this_respons_text)
+                this_respons_data = this_respons_text['data']
+
             elif i['bot_step_id'] == 5 or i['bot_step_id'] == 6:
                 if i['bot_step_id'] == 5:
                     response_mess(i, 5)
@@ -192,9 +196,10 @@ def post_message():
 
 def response_mess(i, id_issue):
     print("response_mess i ==", i)
+    user_redis = json.loads(r.get("user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])).decode('utf-8'))
     order_dm = WebClient(i['slack_access_token']).chat_update(
         channel=i["slack_channel_id"],
-        ts=i["slack_ts"],
+        ts=user_redis["slack_ts"],
         blocks=[
             {
                 "type": "section",
