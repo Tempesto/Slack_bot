@@ -22,8 +22,7 @@ USER_INFO = []
 r = redis.StrictRedis()
 
 
-
-def postMessage_test():
+def post_message():
     print("Start postMessage")
     print("GET =", GET)
     print("BOT_ID =", BOT_ID)
@@ -83,7 +82,7 @@ def postMessage_test():
                 )
                 MESSAGE_SERVER= [
                         {
-                            "bot_uniq_id":'UMQCJQ41Y',
+                            "bot_uniq_id": BOT_ID,
                             "completed_bot_step": None,
                             "bot_schedule_id": i["bot_schedule_id"],
                             "slack_client_id": i['slack_client_id'],
@@ -127,7 +126,7 @@ def postMessage_test():
                 )
                 MESSAGE_SERVER = [
                     {
-                        "bot_uniq_id":'UMQCJQ41Y',
+                        "bot_uniq_id": BOT_ID,
                         "completed_bot_step": 4,
                         "bot_schedule_id": i["bot_schedule_id"],
                         "slack_client_id": i['slack_client_id'],
@@ -197,7 +196,7 @@ def response_mess(i, id_issue):
     )
     MESSAGE_SERVER = [
         {
-            "bot_uniq_id":'UMQCJQ41Y',
+            "bot_uniq_id": BOT_ID,
             "completed_bot_step": id_issue,
             "bot_schedule_id": i["bot_schedule_id"],
             "slack_client_id": i['slack_client_id'],
@@ -277,7 +276,6 @@ def add():
         "slack_access_token": auth_response['access_token'],
         "slack_channel_id": auth_response['incoming_webhook']['channel_id'],
     }
-    # payload = {'json_payload': send_data}
     print('send_data ===', send_data)
     print("\n Client_data =", client_data, '\n')
     send_req = requests.post(COLLBACK, json=send_data)
@@ -347,13 +345,12 @@ def respond():
                         }
                     )
 
-
         elif slack_payload['type'] == 'dialog_submission':
             if slack_payload['callback_id'] == 'focus':
                 if slack_payload['channel']['id'] == i['slack_channel_id']:
                     MESSAGE_SERVER = [
                         {
-                            "bot_uniq_id":'UMQCJQ41Y',
+                            "bot_uniq_id": BOT_ID,
                             "completed_bot_step": 1,
                             "bot_schedule_id": i["bot_schedule_id"],
                             "slack_client_id": i['slack_client_id'],
@@ -383,7 +380,6 @@ def respond():
                                     "text": {
                                         "type": "plain_text",
                                         "text": "Select Objective",
-                                        # "emoji": true
                                     },
                                     "value": "Objective"
                                 }
@@ -391,8 +387,8 @@ def respond():
                         ],
                         attachments=''
                     )
-                    client_data = requests.get(GET+BOT_ID)
-                    data = json(client_data)
+                    client_data = requests.get(GET + BOT_ID)
+                    data = client_data.json()
                     print("DATA SERVER ++++", data)
                     i["bot_schedule_id"] = data["bot_schedule_id"]
                     i["slack_client_id"] = data["slack_client_id"]
@@ -424,7 +420,7 @@ def respond():
                 if slack_payload['channel']['id'] == i['slack_channel_id']:
                     MESSAGE_SERVER = [
                         {
-                                "bot_uniq_id":'UMQCJQ41Y',
+                                "bot_uniq_id": BOT_ID,
                                 "completed_bot_step": 2,
                                 "bot_schedule_id": i["bot_schedule_id"],
                                 "slack_client_id": i['slack_client_id'],
@@ -452,7 +448,7 @@ def respond():
                     )
                     MESSAGE_SERVER = [
                         {
-                                "bot_uniq_id":'UMQCJQ41Y',
+                                "bot_uniq_id": BOT_ID,
                                 "completed_bot_step": 3,
                                 "bot_schedule_id": i["bot_schedule_id"],
                                 "slack_channel_id": i["slack_channel_id"],
@@ -472,5 +468,5 @@ def respond():
 
 
 if __name__ == "__main__":
-    postMessage_test()
+    post_message()
     slack_events_adapter.start(port=3000)
