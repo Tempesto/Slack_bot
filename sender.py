@@ -185,7 +185,9 @@ def post_message():
                 )
             print('Save user_data_dict')
             redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
-            if i['bot_step_id'] != 5 or i['bot_step_id'] != 6:
+            if i['bot_step_id'] == 5 or i['bot_step_id'] == 6:
+                continue
+            else:
                 r.set(redis_user_key, json.dumps(user_data_dict))
             print("redis_user_key",redis_user_key)
             print('Save redis_user_key OK')
@@ -199,6 +201,7 @@ def post_message():
 def response_mess(i, id_issue):
     print("response_mess i ==", i)
     user_redis = json.loads(r.get("user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])).decode('utf-8'))
+    print("user_redis  ====",user_redis)
     order_dm = WebClient(i['slack_access_token']).chat_update(
         channel=i["slack_channel_id"],
         ts=user_redis["slack_ts"],
