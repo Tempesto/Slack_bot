@@ -378,7 +378,7 @@ def respond():
                     MESSAGE_SERVER = {
                             "bot_uniq_id": BOT_ID,
                             "completed_bot_step": 1,
-                            "bot_schedule_id": i["bot_schedule_id"],
+                            "bot_schedule_id": int(i["bot_schedule_id"]),
                             "slack_client_id": i['slack_client_id'],
                             "slack_channel_id":i['slack_channel_id'],
                             "slack_ts": i['slack_ts'],
