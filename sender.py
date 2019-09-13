@@ -25,6 +25,7 @@ r = redis.Redis(host='127.0.0.1', port=6379, db=0)
 
 
 def post_message():
+    user_data_dict = {}
     print("Start postMessage")
     print("GET + BOT_ID=", GET + BOT_ID)
     # print("BOT_ID =", BOT_ID)
@@ -184,7 +185,8 @@ def post_message():
                 )
             print('Save user_data_dict')
             redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
-            r.set(redis_user_key, json.dumps(user_data_dict))
+            if i['bot_step_id'] != 5 or i['bot_step_id'] != 6:
+                r.set(redis_user_key, json.dumps(user_data_dict))
             print("redis_user_key",redis_user_key)
             print('Save redis_user_key OK')
         # r.set('USER_INFO', json.dumps(USER_INFO))
