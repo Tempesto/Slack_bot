@@ -390,7 +390,8 @@ def respond():
                         }
                     print("MESSAGE_SERVER =",MESSAGE_SERVER)
                     client_data = requests.post(POST, json=MESSAGE_SERVER)
-                    print("client_data.content ===", client_data.content)
+                    print("client_data.content ===", client_data.content.json())
+                    print("client_data.content type ===", type(client_data.content.json()))
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i["slack_channel_id"],
                         ts=i["slack_ts"],
@@ -416,7 +417,7 @@ def respond():
                     )
                     # client_data = requests.get(GET + BOT_ID)
                     # data = client_data.json()
-                    response_data = client_data.content
+                    response_data = client_data.content.json()
                     if len(response_data['data']) != 0:
                         print("DATA SERVER ++++", client_data)
                         i["bot_schedule_id"] = str(client_data["bot_schedule_id"])
