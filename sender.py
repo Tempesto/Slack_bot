@@ -391,8 +391,9 @@ def respond():
                     print("MESSAGE_SERVER =",MESSAGE_SERVER)
                     response_client_data = requests.post(POST, json=MESSAGE_SERVER)
                     client_data_dict = json.loads(response_client_data.text)
+                    print("ОТВЕТ на пост тект", client_data_dict)
                     client_data_list = client_data_dict['data']
-
+                    print("ОТВЕТ на пост лист= ", client_data_list)
 
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i["slack_channel_id"],
