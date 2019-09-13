@@ -346,11 +346,11 @@ def respond():
                 if slack_payload['container']['channel_id'] == i['slack_channel_id']:
                     print("if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
                     a = []
-                    for objectives in i['objectives']:
-                        print('objectives===', objectives)
+                    for objective in i['objectives']:
+                        print('objectives===', objective)
                         a.append({
-                            "label": objectives[0]["Title"],
-                            "value": objectives[0]["Id"]
+                            "label": objective["Title"],
+                            "value": objective["Id"]
                         })
                     WebClient(i['slack_access_token']).dialog_open(
                         trigger_id=slack_payload['trigger_id'],
