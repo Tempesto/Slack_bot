@@ -463,8 +463,7 @@ def respond():
             elif slack_payload['callback_id'] == 'Objective':
                 print('\n i in Objective =', i, '\n')
                 if slack_payload['channel']['id'] == i['slack_channel_id']:
-                    MESSAGE_SERVER = [
-                        {
+                    MESSAGE_SERVER = {
                                 "bot_uniq_id": BOT_ID,
                                 "completed_bot_step": 2,
                                 "bot_schedule_id": int(i["bot_schedule_id"]),
@@ -477,9 +476,8 @@ def respond():
                                     "objective_id": int(slack_payload['submission']['meal_preferences'])
                                 }
                             }
-                    ]
                     print("MESSAGE_SERVER in end", MESSAGE_SERVER)
-                    reply_from_post=requests.post(POST, json=MESSAGE_SERVER)
+                    reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
                     print("reply from post =", reply_from_post.text)
                     this_respons_text = json.loads(reply_from_post.text)
                     print("this_respons_text =", this_respons_text)
