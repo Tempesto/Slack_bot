@@ -63,7 +63,7 @@ def postMessage_test():
                 print(order_dm)
                 USER_ORDER.append(
                     {
-                        "bot_uniq_id": 'UMQCJQ41Y',
+                        "bot_uniq_id": BOT_ID,
                         "bot_schedule_id": i['bot_schedule_id'],
                         "slack_client_id": i['slack_client_id'],
                         "slack_channel_id": order_dm["channel"],
@@ -212,7 +212,7 @@ def response_mess(i, id_issue):
     requests.post(POST, data=json.dumps(MESSAGE_SERVER))
     USER_ORDER.append(
         {
-            "bot_uniq_id": 'UMQCJQ41Y',
+            "bot_uniq_id": BOT_ID,
             "completed_bot_step": None,
             "bot_schedule_id": i['bot_schedule_id'],
             "bot_step_id": i["bot_step_id"],
