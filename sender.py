@@ -317,8 +317,7 @@ def respond():
     print("keys = = =  ",redis_keys)
 
     for key in redis_keys:
-        print("key ==  =  ",key)
-        if "user_" in key:
+        if "user_" in key.decode("utf-8"):
             USER = json.loads(r.get(key).decode('utf-8'))
             slack_payload = json.loads(request.form.get("payload"))
             print('\n USER_ORDER in start foo= ', USER, '\n')
