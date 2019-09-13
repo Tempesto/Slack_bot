@@ -389,9 +389,9 @@ def respond():
                             }
                         }
                     print("MESSAGE_SERVER =",MESSAGE_SERVER)
-                    client_data = requests.post(POST, json=MESSAGE_SERVER)
-                    print("text", json.loads(client_data.text))
-                    print("json", type(client_data.json()))
+                    response_client_data = requests.post(POST, json=MESSAGE_SERVER)
+                    client_data_dict = json.loads(response_client_data.text)
+
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i["slack_channel_id"],
                         ts=i["slack_ts"],
@@ -417,9 +417,9 @@ def respond():
                     )
                     # client_data = requests.get(GET + BOT_ID)
                     # data = client_data.json()
-                    response_data = client_data.content.json()
-                    if len(response_data['data']) != 0:
-                        print("DATA SERVER ++++", client_data)
+
+                    if len(client_data_dict['data']) != 0:
+                        client_data = client_data_dict['data']
                         i["bot_schedule_id"] = str(client_data["bot_schedule_id"])
                         i["slack_client_id"] = client_data["slack_client_id"]
                         i["slack_channel_id"] = client_data["slack_channel_id"]
