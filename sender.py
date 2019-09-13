@@ -314,8 +314,10 @@ def add():
 def respond():
     print("Start after_button")
     redis_keys = r.keys()
+    print("keys = = =  ",redis_keys)
 
     for key in redis_keys:
+        print("key ==  =  ",key)
         if "user_" in key:
             USER = json.loads(r.get(key).decode('utf-8'))
             slack_payload = json.loads(request.form.get("payload"))
@@ -456,7 +458,6 @@ def respond():
                                 print('\n This i in dialog_submission +  meal_preferences =', USER, '\n')
                                 print('USER', USER)
                                 redis_user_key = "user_" + USER['slack_client_id'] + "_" + str(USER['bot_schedule_id'])
-                                r.set(redis_user_key, json.dumps(user_data_dict))
                                 r.set(redis_user_key, json.dumps(USER))
 
                                 print('USER454==', USER)
