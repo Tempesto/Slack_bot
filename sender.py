@@ -307,7 +307,7 @@ def add():
 # user click button
 @slack_events_adapter.server.route("/after_button", methods=["POST", "GET"])
 def respond():
-    print("Stert after_button")
+    print("Start after_button")
     USER_ORDER = json.loads(r.get('USER_ORDER').decode('utf-8'))
     slack_payload = json.loads(request.form.get("payload"))
     print('\n USER_ORDER in start foo= ', USER_ORDER, '\n')
