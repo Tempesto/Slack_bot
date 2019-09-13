@@ -212,25 +212,30 @@ def response_mess(i, id_issue):
                 }
             }]
     )
-    MESSAGE_SERVER = [
-        {
+    MESSAGE_SERVER = {
             "bot_uniq_id": BOT_ID,
             "completed_bot_step": id_issue,
-            "bot_schedule_id": i["bot_schedule_id"],
+            "bot_schedule_id": int(i["bot_schedule_id"]),
             "slack_client_id": i['slack_client_id'],
-            "slack_channel_id":i["slack_channel_id"],
+            "slack_channel_id": i["slack_channel_id"],
             "slack_ts": i['slack_ts'],
             "data": {
                 "focus_title": None,
                 "objective_id": None
             }
         }
-    ]
-    requests.post(POST, data=json.dumps(MESSAGE_SERVER))
+
+
+    reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
+    print("reply from post =", reply_from_post.text)
+    this_respons_text = json.loads(reply_from_post.text)
+    print("this_respons_text =", this_respons_text)
+    this_respons_data = this_respons_text['data']
+
     user_data_dict = {
             "bot_uniq_id": BOT_ID,
             "completed_bot_step": None,
-            "bot_schedule_id": str(i['bot_schedule_id']),
+            "bot_schedule_id": int(i['bot_schedule_id']),
             "bot_step_id": str(i["bot_step_id"]),
             "slack_client_id": i['slack_client_id'],
             "slack_channel_id": order_dm["channel"],
