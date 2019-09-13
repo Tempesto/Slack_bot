@@ -169,9 +169,12 @@ def post_message():
                     channel=i['slack_channel_id'],
                     ts=i['slack_ts']
                 )
+    print('Save USER_ORDER')
     r.set('USER_ORDER', json.dumps(USER_ORDER))
+    print('Save USER_ORDER OK')
     r.set('USER_INFO', json.dumps(USER_INFO))
     threading.Timer(60, post_message).start()
+    print("End of post_message")
 
 
 
