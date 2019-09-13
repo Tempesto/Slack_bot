@@ -171,10 +171,9 @@ def post_message():
                 )
     r.set('USER_ORDER', json.dumps(USER_ORDER))
     r.set('USER_INFO', json.dumps(USER_INFO))
-    timer_send_message.start()
+    threading.Timer(60, post_message).start()
 
 
-timer_send_message = threading.Timer(60, post_message)
 
 
 def response_mess(i, id_issue):
