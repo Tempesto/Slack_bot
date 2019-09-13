@@ -475,8 +475,12 @@ def respond():
                                 }
                             }
                     ]
-                    requests.post(POST, data=json.dumps(MESSAGE_SERVER))
-
+                    reply_from_post=requests.post(POST, data=json.dumps(MESSAGE_SERVER))
+                    print("reply from post =", reply_from_post)
+                    this_respons_text = json.loads(reply_from_post.text)
+                    print("this_respons_text =", this_respons_text)
+                    this_respons_data = this_respons_text['data']
+                    print("this_respons_data =", this_respons_data)
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i['slack_channel_id'],
                         ts=i['slack_ts'],
