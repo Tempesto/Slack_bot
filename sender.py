@@ -179,13 +179,14 @@ def post_message():
                 #     }
                 # )
             elif i['bot_step_id'] == 7:
+                user_redis = json.loads(r.get("user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])).decode('utf-8'))
                 order_dm = WebClient(i['slack_access_token']).chat_delete(
                     channel=i['slack_channel_id'],
-                    ts=i['slack_ts']
+                    ts=user_redis['slack_ts']
                 )
             print('Save user_data_dict')
             redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
-            if i['bot_step_id'] == 5 or i['bot_step_id'] == 6:
+            if i['bot_step_id'] == 5 or i['bot_step_id'] == 6 or i['bot_step_id'] == 7:
                 continue
             else:
                 r.set(redis_user_key, json.dumps(user_data_dict))
