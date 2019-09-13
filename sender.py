@@ -391,6 +391,7 @@ def respond():
                         }
                     ]
                     client_data = requests.post(POST, data=json.dumps(MESSAGE_SERVER))
+                    print("client_data ===", client_data)
                     WebClient(i['slack_access_token']).chat_update(
                         channel=i["slack_channel_id"],
                         ts=i["slack_ts"],
