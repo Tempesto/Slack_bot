@@ -289,6 +289,7 @@ authed_teams = {}
 def add():
     code_arg = request.args.get('code')
     us_id = request.args.get('state')
+    print(type(us_id))
     print('User id =', us_id)
     pre, url = us_id.split('"')
     print('pre =', pre)
