@@ -289,10 +289,9 @@ authed_teams = {}
 def add():
     code_arg = request.args.get('code')
     us_id = request.args.get('state')
-    print(type(us_id)) 
+    print(type(us_id))
     print('User id =', us_id)
-    pre, url = us_id.split('"')
-    print('pre =', pre)
+    url = us_id.split('"')[3:4]
     print('url=', url)
     print('CODE ====', code_arg)
     auth_response = client.oauth_access(
@@ -325,7 +324,7 @@ def add():
     send_req = requests.post(COLLBACK, json=send_data)
     print('send_req == =', send_req)
     print('respons===', send_req.content)
-    return redirect('https://dev.unitonomy.com')
+    return redirect(url)
 
 
 # user click button
