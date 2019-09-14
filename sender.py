@@ -289,7 +289,9 @@ authed_teams = {}
 def add():
     code_arg = request.args.get('code')
     us_id = request.args.get('state')
-
+    pre, url = us_id.split('"')
+    print('pre =', pre)
+    print('url=', url)
     print('User id =', us_id)
     print('CODE ====', code_arg)
     auth_response = client.oauth_access(
