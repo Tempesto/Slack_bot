@@ -333,7 +333,8 @@ def add():
 def respond():
     print("Start after_button")
     redis_keys = r.keys()
-    print("keys = = =  ",redis_keys)
+    print("keys = = =  ", redis_keys)
+    # user_ULJ4829LL_12
 
     for key in redis_keys:
         if "user_" in key.decode("utf-8"):
@@ -346,7 +347,7 @@ def respond():
                 print(" if slack_payload['type'] == 'block_actions':")
                 if slack_payload['actions'][0]['value'] == 'focus':
                     print('slack_payload["trigger_id"]= ', slack_payload['trigger_id'])
-                    if slack_payload['container']['channel_id'] == USER['slack_channel_id']:
+                    if slack_payload['user']['id'] == USER['slack_client_id']:
                         print("focus if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
                         WebClient(USER['slack_access_token']).dialog_open(
                             type='section',
@@ -372,7 +373,7 @@ def respond():
                 elif slack_payload['actions'][0]['value'] == 'Objective':
                     print("elif slack_payload['actions'][0]['value'] == 'Objective':")
                     print("USER SLACK ID=", USER)
-                    if slack_payload['container']['channel_id'] == USER['slack_channel_id']:
+                    if slack_payload['user']['id'] == USER['slack_client_id']:
                         print("Objective if slack_payload['container']['channel_id'] == i['slack_channel_id']:")
                         a = []
                         for objective in USER['objectives']:
@@ -402,7 +403,7 @@ def respond():
             elif slack_payload['type'] == 'dialog_submission':
                 print("elif slack_payload['type'] == 'dialog_submission':")
                 if slack_payload['callback_id'] == 'focus':
-                    if slack_payload['channel']['id'] == USER['slack_channel_id']:
+                    if slack_payload['user']['id'] == USER['slack_client_id']:
                         print(" if slack_payload['channel']['id'] == i['slack_channel_id']:")
                         MESSAGE_SERVER = {
                                 "bot_uniq_id": BOT_ID,
@@ -493,7 +494,7 @@ def respond():
 
                 elif slack_payload['callback_id'] == 'Objective':
                     print('\n i in Objective =', USER, '\n')
-                    if slack_payload['channel']['id'] == USER['slack_channel_id']:
+                    if slack_payload['user']['id'] == USER['slack_client_id']:
                         MESSAGE_SERVER = {
                                     "bot_uniq_id": BOT_ID,
                                     "completed_bot_step": 2,
