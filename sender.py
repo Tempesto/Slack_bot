@@ -404,7 +404,7 @@ def respond():
                 print("elif slack_payload['type'] == 'dialog_submission':")
                 if slack_payload['callback_id'] == 'focus':
                     if slack_payload['user']['id'] == USER['slack_client_id']:
-                        print(" if slack_payload['channel']['id'] == i['slack_channel_id']:")
+                        print(" if slack_payload['user']['id'] == USER['slack_client_id']:")
                         MESSAGE_SERVER = {
                                 "bot_uniq_id": BOT_ID,
                                 "completed_bot_step": 1,
