@@ -291,8 +291,9 @@ def add():
     state = request.args.get('state')
     print(type(state))
     print('State  =', state)
-    url = state.split('"')[3:4]
-    print('url=', url)
+    sub_dom, us_id = state.split('.')
+    print('sub_dom =',sub_dom)
+    print('us_id =',us_id)
     print('CODE ====', code_arg)
     auth_response = client.oauth_access(
         client_id=SLACK_CLIENT_ID,
@@ -324,7 +325,7 @@ def add():
     send_req = requests.post(COLLBACK, json=send_data)
     print('send_req == =', send_req)
     print('respons===', send_req.content)
-    return redirect(url)
+    return redirect('https://'+sub_dom+'.'+'.dev.unitonomy.com')
 
 
 # user click button
