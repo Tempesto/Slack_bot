@@ -339,7 +339,7 @@ def respond():
         if "user_" in key.decode("utf-8"):
             USER = json.loads(r.get(key).decode('utf-8'))
             slack_payload = json.loads(request.form.get("payload"))
-            print('\n USER_ORDER in start foo= ', USER, '\n')
+            print('\n USER ========== ', USER, '\n')
             print('\n slack_payload in start foo=', slack_payload, '\n')
 
             if slack_payload['type'] == 'block_actions':
@@ -417,12 +417,13 @@ def respond():
                                     "objective_id": None
                                 }
                             }
-                        print("MESSAGE_SERVER =",MESSAGE_SERVER)
+                        print("MESSAGE_SERVER === ", MESSAGE_SERVER)
                         response_client_data = requests.post(POST, json=MESSAGE_SERVER)
+                        print("response_client_data ==== ", response_client_data)
                         client_data_dict = json.loads(response_client_data.text)
-                        print("ОТВЕТ на пост тект", client_data_dict)
+                        print("client_data_dict ==== ", client_data_dict)
                         client_data_list = client_data_dict['data']
-                        print("ОТВЕТ на пост лист= ", client_data_list)
+                        print("client_data_list ==== ", client_data_list)
 
                         WebClient(USER['slack_access_token']).chat_update(
                             channel=USER["slack_channel_id"],
