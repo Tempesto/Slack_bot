@@ -544,7 +544,7 @@ def respond():
                         requests.post(POST, json=MESSAGE_SERVER)
 
             print("End of /after_button \n")
-            return make_response("", 200)
+    return make_response("", 200)
 
 
 if __name__ == "__main__":
