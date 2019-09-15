@@ -27,16 +27,14 @@ r = redis.Redis(host='127.0.0.1', port=6379, db=0)
 def post_message():
     user_data_dict = {}
     print("Start postMessage")
-    print("GET + BOT_ID=", GET + BOT_ID)
-    # print("BOT_ID =", BOT_ID)
     response = requests.get(GET+BOT_ID)
     responseJson = response.json()
     print('Data ==== ', responseJson['data'])
     if len(responseJson['data']) != 0:
         for i in responseJson['data']:
             if i['bot_step_id'] == 1:
-                print('i=', i)
-                print('channel', i['slack_channel_id'])
+                print('bot_step_id === 1,  for data ==== ', i)
+
                 order_dm = WebClient(i['slack_access_token']).chat_postMessage(
                     as_user=False,
                     channel=i['slack_channel_id'],
@@ -60,8 +58,7 @@ def post_message():
                     ],
                     attachments=''
                 )
-                assert order_dm["ok"]
-                print('Assert : ok')
+
                 print(order_dm)
                 obj_list = []
                 for j in i["objectives"]:
@@ -91,17 +88,17 @@ def post_message():
                         "message": order_dm["message"]["text"]
                     }
                 )
-                MESSAGE_SERVER= {
-                            "bot_uniq_id": BOT_ID,
-                            "completed_bot_step": None,
-                            "bot_schedule_id": i["bot_schedule_id"],
-                            "slack_client_id": i['slack_client_id'],
-                            "slack_ts": order_dm["ts"],
-                            "data": {
-                                "focus_title": None,
-                                "objective_id": None
-                            }
-                        }
+                # MESSAGE_SERVER= {
+                #             "bot_uniq_id": BOT_ID,
+                #             "completed_bot_step": None,
+                #             "bot_schedule_id": i["bot_schedule_id"],
+                #             "slack_client_id": i['slack_client_id'],
+                #             "slack_ts": order_dm["ts"],
+                #             "data": {
+                #                 "focus_title": None,
+                #                 "objective_id": None
+                #             }
+                #         }
 
                 #                reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
                 #                print("reply from post =", reply_from_post.text)
@@ -184,14 +181,17 @@ def post_message():
                     channel=i['slack_channel_id'],
                     ts=user_redis['slack_ts']
                 )
-            print('Save user_data_dict')
-            redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
+
+
             if i['bot_step_id'] == 4 or i['bot_step_id'] == 5 or i['bot_step_id'] == 6 or i['bot_step_id'] == 7:
                 continue
+
             else:
+                redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
+                print("redis_user_key", redis_user_key)
+                print("saved to redis ===== ", user_data_dict)
                 r.set(redis_user_key, json.dumps(user_data_dict))
-            print("redis_user_key",redis_user_key)
-            print('Save redis_user_key OK')
+
         # r.set('USER_INFO', json.dumps(USER_INFO))
     threading.Timer(60, post_message).start()
     print("End of post_message")
