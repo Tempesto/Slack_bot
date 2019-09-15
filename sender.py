@@ -288,10 +288,10 @@ authed_teams = {}
 @slack_events_adapter.server.route("/thanks", methods=["GET", "POST"])
 def add():
     code_arg = request.args.get('code')
-    us_id = request.args.get('state')
-    print(type(us_id))
-    print('User id =', us_id)
-    url = us_id.split('"')[3:4]
+    state = request.args.get('state')
+    print(type(state))
+    print('State  =', state)
+    url = state.split('"')[3:4]
     print('url=', url)
     print('CODE ====', code_arg)
     auth_response = client.oauth_access(
