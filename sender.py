@@ -5,14 +5,10 @@ import redis
 import requests
 import threading
 
-
 import json
 from flask import request, make_response, Flask, render_template, redirect
 
 app = Flask(__name__)
-
-# cel = Celery('redis_start', broker='redis://localhost:6379//', backend='redis', )
-# cel.conf.enable_utc = False
 
 slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events")
 client = WebClient(TOKENB)
@@ -20,7 +16,6 @@ client = WebClient(TOKENB)
 user_id = 'ULJ4829LL'
 USER_ORDER = []
 USER_INFO = []
-# r = redis.StrictRedis()
 r = redis.Redis(host='127.0.0.1', port=6379, db=0)
 
 
@@ -88,23 +83,6 @@ def post_message():
                         "message": order_dm["message"]["text"]
                     }
                 )
-                # MESSAGE_SERVER= {
-                #             "bot_uniq_id": BOT_ID,
-                #             "completed_bot_step": None,
-                #             "bot_schedule_id": i["bot_schedule_id"],
-                #             "slack_client_id": i['slack_client_id'],
-                #             "slack_ts": order_dm["ts"],
-                #             "data": {
-                #                 "focus_title": None,
-                #                 "objective_id": None
-                #             }
-                #         }
-
-                #                reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
-                #                print("reply from post =", reply_from_post.text)
-                #                this_respons_text = json.loads(reply_from_post.text)
-                #                print("this_respons_text =", this_respons_text)
-                #                this_respons_data = this_respons_text['data']
 
             elif i['bot_step_id'] == 5 or i['bot_step_id'] == 6:
                 if i['bot_step_id'] == 5:
@@ -136,45 +114,6 @@ def post_message():
                     ],
                     attachments=''
                 )
-                # MESSAGE_SERVER = [
-                #     {
-                #         "bot_uniq_id": BOT_ID,
-                #         "completed_bot_step": 4,
-                #         "bot_schedule_id": i["bot_schedule_id"],
-                #         "slack_client_id": i['slack_client_id'],
-                #         "slack_channel_id":i["slack_channel_id"],
-                #         "slack_ts": i['slack_ts'],
-                #         "data": {
-                #
-                #             "focus_title": "",
-                #             "objective_id": None
-                #         }
-                #     }
-                # ]
-                # requests.post(POST, data=json.dumps(MESSAGE_SERVER))
-                # user_data_dict = {
-                #         "bot_uniq_id": BOT_ID,
-                #         "completed_bot_step": 'None',
-                #         "bot_schedule_id": i['bot_schedule_id'],
-                #         "slack_client_id": i['slack_client_id'],
-                #         "slack_channel_id": order_dm["channel"],
-                #         "slack_ts": order_dm["ts"],
-                #         "focus": '',
-                #         "slack_access_token": i['slack_access_token'],
-                #         "bot_step_title": i['bot_step_title'],
-                #         "bot_next_step_success_title": i['bot_next_step_success_title'],
-                #         "objectives": i["objectives"]
-                #     }
-                # print('user_data_dict ===', user_data_dict)
-                # USER_INFO.append(
-                #     {
-                #         "slack_client_id": i['slack_client_id'],
-                #         "slack_channel_id": order_dm["channel"],
-                #         "message": order_dm["message"]["text"],
-                #         "completed_bot_step": 4,
-                #         "response": order_dm['ok'],
-                #     }
-                # )
             elif i['bot_step_id'] == 7:
                 user_redis = json.loads(r.get("user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])).decode('utf-8'))
                 order_dm = WebClient(i['slack_access_token']).chat_delete(
@@ -182,17 +121,13 @@ def post_message():
                     ts=user_redis['slack_ts']
                 )
 
-
             if i['bot_step_id'] == 4 or i['bot_step_id'] == 5 or i['bot_step_id'] == 6 or i['bot_step_id'] == 7:
                 continue
-
             else:
                 redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
                 print("redis_user_key", redis_user_key)
                 print("saved to redis ===== ", user_data_dict)
                 r.set(redis_user_key, json.dumps(user_data_dict))
-
-        # r.set('USER_INFO', json.dumps(USER_INFO))
     threading.Timer(60, post_message).start()
     print("End of post_message")
 
@@ -223,66 +158,9 @@ def response_mess(i, id_issue):
                 }
             }]
     )
-    # MESSAGE_SERVER = {
-    #         "bot_uniq_id": BOT_ID,
-    #         "completed_bot_step": id_issue,
-    #         "bot_schedule_id": int(i["bot_schedule_id"]),
-    #         "slack_client_id": i['slack_client_id'],
-    #         "slack_channel_id": i["slack_channel_id"],
-    #         "slack_ts": i['slack_ts'],
-    #         "data": {
-    #             "focus_title": None,
-    #             "objective_id": None
-    #         }
-    #     }
-    #
-    #
-    # reply_from_post = requests.post(POST, json=MESSAGE_SERVER)
-    # print("reply from post =", reply_from_post.text)
-    # this_respons_text = json.loads(reply_from_post.text)
-    # print("this_respons_text =", this_respons_text)
-    # this_respons_data = this_respons_text['data']
-
-    # user_data_dict = {
-    #         "bot_uniq_id": BOT_ID,
-    #         "completed_bot_step": None,
-    #         "bot_schedule_id": int(i['bot_schedule_id']),
-    #         "bot_step_id": str(i["bot_step_id"]),
-    #         "slack_client_id": i['slack_client_id'],
-    #         "slack_channel_id": order_dm["channel"],
-    #         "slack_ts": order_dm["ts"],
-    #         "message": order_dm["message"]["text"],
-    #         "ts": order_dm["ts"],
-    #         "focus": '',
-    #         "slack_access_token": i['slack_access_token'],
-    #         "bot_step_title": i['bot_step_title'],
-    #         "bot_next_step_success_title": i['bot_next_step_success_title'],
-    #         "objectives": [
-    #             {
-    #                 str(i["objectives"]["Id"]),
-    #                 i["objectives"]["Title"]
-    #             }
-    #         ]
-    #     }
-    # USER_INFO.append(
-    #     {
-    #         "slack_client_id": i['slack_client_id'],
-    #         "slack_channel_id": i["slack_channel_id"],
-    #
-    #         "completed_bot_step": id_issue,
-    #         "response": order_dm['ok'],
-    #     }
-    # )
-
-    # redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
-    # r.set(redis_user_key, json.dumps(user_data_dict))
-    # print("user_data_dict261", user_data_dict)
-    # r.set('USER_INFO', json.dumps(USER_INFO))
-
 
 
 authed_teams = {}
-
 
 # registrations users
 @slack_events_adapter.server.route("/thanks", methods=["GET", "POST"])
@@ -334,15 +212,12 @@ def respond():
     print("Start after_button")
     redis_keys = r.keys()
     print("keys = = =  ", redis_keys)
-    # user_ULJ4829LL_12
-
     for key in redis_keys:
         if "user_" in key.decode("utf-8"):
             USER = json.loads(r.get(key).decode('utf-8'))
             slack_payload = json.loads(request.form.get("payload"))
             print('\n USER ========== ', USER, '\n')
             print('\n slack_payload in start foo=', slack_payload, '\n')
-
             if slack_payload['type'] == 'block_actions':
                 print(" if slack_payload['type'] == 'block_actions':")
                 if slack_payload['actions'][0]['value'] == 'focus':
@@ -367,8 +242,6 @@ def respond():
                                 ]
                             }
                         )
-
-
 
                 elif slack_payload['actions'][0]['value'] == 'Objective':
                     print("elif slack_payload['actions'][0]['value'] == 'Objective':")
@@ -425,7 +298,6 @@ def respond():
                         print("client_data_dict ==== ", client_data_dict)
                         client_data_list = client_data_dict['data']
                         print("client_data_list ==== ", client_data_list)
-
                         WebClient(USER['slack_access_token']).chat_update(
                             channel=USER["slack_channel_id"],
                             ts=USER["slack_ts"],
@@ -449,8 +321,6 @@ def respond():
                             ],
                             attachments=''
                         )
-                        # client_data = requests.get(GET + BOT_ID)
-                        # data = client_data.json()
 
                         if len(client_data_list) != 0:
                             for j in client_data_list:
@@ -461,36 +331,13 @@ def respond():
                                 USER["slack_access_token"] = j["slack_access_token"]
                                 USER["bot_step_title"] = str(j["bot_step_title"])
                                 USER["bot_next_step_success_title"] = j["bot_next_step_success_title"]
-                                # obj_list = list()
-                                # if len(j["objectives"]) != 0:
-                                #     for objective in j["objectives"]:
-                                #         x = {
-                                #             "Id": objective["Id"],
-                                #             "Title": objective["Title"]
-                                #         }
-                                #         obj_list.append(x)
-                                #
-                                #
-                                # i["objectives"] = obj_list
-
-
                                 USER['focus'] = slack_payload['submission']['meal_preferences']
                                 print('slack_payload in oredr= ', slack_payload['submission']['meal_preferences'], '\n')
                                 print('\n This i in dialog_submission +  meal_preferences =', USER, '\n')
                                 print('USER', USER)
                                 redis_user_key = "user_" + USER['slack_client_id'] + "_" + str(USER['bot_schedule_id'])
                                 r.set(redis_user_key, json.dumps(USER))
-
                                 print('USER454==', USER)
-                                # USER_INFO.append(
-                                #     {
-                                #         "slack_client_id": i['slack_client_id'],
-                                #         "slack_channel_id": i["slack_channel_id"],
-                                #         "completed_bot_step": 2,
-                                #         "text": i['bot_next_step_success_title']
-                                #     }
-                                # )
-                                # r.set('USER_INFO', json.dumps(USER_INFO))
 
                 elif slack_payload['callback_id'] == 'Objective':
                     print('\n i in Objective =', USER, '\n')
@@ -535,14 +382,12 @@ def respond():
                                     "slack_client_id": USER['slack_client_id'],
                                     "slack_ts": USER['slack_ts'],
                                     "data": {
-
                                         "focus_title": "",
                                         "objective_id": None
                                     }
                                 }
                         ]
                         requests.post(POST, json=MESSAGE_SERVER)
-
             print("End of /after_button \n")
     return make_response("", 200)
 
