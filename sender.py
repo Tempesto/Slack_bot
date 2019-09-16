@@ -404,8 +404,9 @@ def respond():
                                     }
                                 }
                         ]
-                        
+
                         requests.post(POST, json=MESSAGE_SERVER)
+                        r.delete(key)
             print("End of /after_button \n")
     return make_response("", 200)
 
