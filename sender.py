@@ -28,6 +28,18 @@ def post_message():
     if len(responseJson['data']) != 0:
         for i in responseJson['data']:
             if i['bot_step_id'] == 1:
+                if i['objectives'] == []:
+                    WebClient(i['slack_access_token']).chat_postMessage(
+                        as_user=False,
+                        channel=i['slack_channel_id'],
+                        blocks=[{
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": i['msg']
+                            }}],
+                        attachments=''
+                    )
                 print('bot_step_id === 1,  for data ==== ', i)
                 print('\n i["objectives"]', i['objectives'], '\n')
                 order_dm = WebClient(i['slack_access_token']).chat_postMessage(
