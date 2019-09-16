@@ -277,6 +277,8 @@ def respond():
 
             elif slack_payload['type'] == 'dialog_submission':
                 print("elif slack_payload['type'] == 'dialog_submission':")
+                print('\n slack_payload[user][id]===', slack_payload['user']['id'])
+                print('\n USER[slack_client_id] ====', USER['slack_client_id'])
                 if slack_payload['callback_id'] == 'focus':
                     if slack_payload['user']['id'] == USER['slack_client_id']:
                         print(" if slack_payload['user']['id'] == USER['slack_client_id']:")
