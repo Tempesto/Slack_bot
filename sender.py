@@ -170,8 +170,8 @@ def add():
     print(type(state))
     print('State  =', state)
     sub_dom, us_id = state.split('.')
-    print('sub_dom =',sub_dom)
-    print('us_id =',us_id)
+    print('sub_dom =', sub_dom)
+    print('us_id =', us_id)
     print('CODE ====', code_arg)
     auth_response = client.oauth_access(
         client_id=SLACK_CLIENT_ID,
@@ -200,7 +200,7 @@ def add():
     }
     print('send_data ===', send_data)
     print("\n Client_data =", client_data, '\n')
-    print(' \n client_data[name]===', client_data['name'] + '\n')
+    print('\n client_data[name]===', client_data['name'])
     send_req = requests.post(COLLBACK, json=send_data)
     print('send_req == =', send_req)
     print('respons===', send_req.content)
