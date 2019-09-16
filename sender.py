@@ -200,6 +200,7 @@ def add():
     }
     print('send_data ===', send_data)
     print("\n Client_data =", client_data, '\n')
+    print(' \n client_data[name]===', client_data['name'] + '\n')
     send_req = requests.post(COLLBACK, json=send_data)
     print('send_req == =', send_req)
     print('respons===', send_req.content)
