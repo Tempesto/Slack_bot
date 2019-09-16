@@ -371,7 +371,7 @@ def respond():
                                 "type": "section",
                                 "text": {
                                     "type": "mrkdwn",
-                                    "text": USER["bot_next_step_success_title"] + " " + "https://dev.unitonomy.com/#/alignment-map"
+                                    "text": USER["bot_next_step_success_title"]
                                 }}],
                             attachments=''
                         )
