@@ -25,7 +25,7 @@ def post_message():
     response = requests.get(GET+BOT_ID)
     responseJson = response.json()
     print('Data ==== responseJson (get)', responseJson['data'])
-    print(("\n Objective in responseJson =", responseJson['data']['objectives']))
+    print(("\n Objective in responseJson =", responseJson['data']['objectives'][0]))
     if len(responseJson['data']) != 0:
         for i in responseJson['data']:
             if i['bot_step_id'] == 1:
