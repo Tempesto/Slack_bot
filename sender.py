@@ -256,7 +256,7 @@ def respond():
                                 "label": objective["Title"],
                                 "value": objective["Id"]
                             })
-                        print('\n All objective in  USER=====', a +'\n')
+                        print('\n All objective in  USER=====', a, '\n')
                         WebClient(USER['slack_access_token']).dialog_open(
                             trigger_id=slack_payload['trigger_id'],
                             dialog={
