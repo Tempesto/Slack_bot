@@ -28,6 +28,8 @@ def post_message():
     if len(responseJson['data']) != 0:
         for i in responseJson['data']:
             if i['bot_step_id'] == 1:
+                print('bot_step_id === 1,  for data ==== ', i)
+                print('\n i["objectives"]', i['objectives'], '\n')
                 if i['objectives'] == []:
                     WebClient(i['slack_access_token']).chat_postMessage(
                         as_user=False,
@@ -41,8 +43,6 @@ def post_message():
                         attachments=''
                     )
 
-                print('bot_step_id === 1,  for data ==== ', i)
-                print('\n i["objectives"]', i['objectives'], '\n')
                 order_dm = WebClient(i['slack_access_token']).chat_postMessage(
                     as_user=False,
                     channel=i['slack_channel_id'],
@@ -76,16 +76,16 @@ def post_message():
                     }
                     obj_list.append(x)
                 user_data_dict = {
-                        "bot_uniq_id": BOT_ID,
-                        "bot_schedule_id": int(i['bot_schedule_id']),
-                        "slack_client_id": i['slack_client_id'],
-                        "slack_channel_id": order_dm["channel"],
-                        "slack_ts": order_dm["ts"],
-                        "focus": '',
-                        "slack_access_token": i['slack_access_token'],
-                        "bot_step_title": i['bot_step_title'],
-                        "bot_next_step_success_title": i['bot_next_step_success_title'],
-                        "objectives": obj_list
+                    "bot_uniq_id": BOT_ID,
+                    "bot_schedule_id": int(i['bot_schedule_id']),
+                    "slack_client_id": i['slack_client_id'],
+                    "slack_channel_id": order_dm["channel"],
+                    "slack_ts": order_dm["ts"],
+                    "focus": '',
+                    "slack_access_token": i['slack_access_token'],
+                    "bot_step_title": i['bot_step_title'],
+                    "bot_next_step_success_title": i['bot_next_step_success_title'],
+                    "objectives": obj_list
                 }
 
                 print("user_data_dict ===", user_data_dict)
