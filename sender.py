@@ -36,7 +36,7 @@ def post_message():
                             "type": "section",
                             "text": {
                                 "type": "mrkdwn",
-                                "text": i['msg']
+                                "text": responseJson['msg']
                             }}],
                         attachments=''
                     )
