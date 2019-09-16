@@ -42,60 +42,60 @@ def post_message():
                             }}],
                         attachments=''
                     )
-
-                order_dm = WebClient(i['slack_access_token']).chat_postMessage(
-                    as_user=False,
-                    channel=i['slack_channel_id'],
-                    blocks=[
-                        {
-                            "type": "section",
-                            "text": {
-                                "type": "mrkdwn",
-                                "text": i['bot_step_title']
-                            },
-                            "accessory": {
-                                "type": "button",
+                else:
+                    order_dm = WebClient(i['slack_access_token']).chat_postMessage(
+                        as_user=False,
+                        channel=i['slack_channel_id'],
+                        blocks=[
+                            {
+                                "type": "section",
                                 "text": {
-                                    "type": "plain_text",
-                                    "text": "Send focus",
-                                    # "emoji": true
+                                    "type": "mrkdwn",
+                                    "text": i['bot_step_title']
                                 },
-                                "value": "focus"
+                                "accessory": {
+                                    "type": "button",
+                                    "text": {
+                                        "type": "plain_text",
+                                        "text": "Send focus",
+                                        # "emoji": true
+                                    },
+                                    "value": "focus"
+                                }
                             }
+                        ],
+                        attachments=''
+                    )
+
+                    print(order_dm)
+                    obj_list = []
+                    for j in i["objectives"]:
+                        x = {
+                            "Id": j["Id"],
+                            "Title": j["Title"]
                         }
-                    ],
-                    attachments=''
-                )
-
-                print(order_dm)
-                obj_list = []
-                for j in i["objectives"]:
-                    x = {
-                        "Id": j["Id"],
-                        "Title": j["Title"]
-                    }
-                    obj_list.append(x)
-                user_data_dict = {
-                    "bot_uniq_id": BOT_ID,
-                    "bot_schedule_id": int(i['bot_schedule_id']),
-                    "slack_client_id": i['slack_client_id'],
-                    "slack_channel_id": order_dm["channel"],
-                    "slack_ts": order_dm["ts"],
-                    "focus": '',
-                    "slack_access_token": i['slack_access_token'],
-                    "bot_step_title": i['bot_step_title'],
-                    "bot_next_step_success_title": i['bot_next_step_success_title'],
-                    "objectives": obj_list
-                }
-
-                print("user_data_dict ===", user_data_dict)
-                USER_INFO.append(
-                    {
+                        obj_list.append(x)
+                    user_data_dict = {
+                        "bot_uniq_id": BOT_ID,
+                        "bot_schedule_id": int(i['bot_schedule_id']),
                         "slack_client_id": i['slack_client_id'],
                         "slack_channel_id": order_dm["channel"],
-                        "message": order_dm["message"]["text"]
+                        "slack_ts": order_dm["ts"],
+                        "focus": '',
+                        "slack_access_token": i['slack_access_token'],
+                        "bot_step_title": i['bot_step_title'],
+                        "bot_next_step_success_title": i['bot_next_step_success_title'],
+                        "objectives": obj_list
                     }
-                )
+
+                    print("user_data_dict ===", user_data_dict)
+                    USER_INFO.append(
+                        {
+                            "slack_client_id": i['slack_client_id'],
+                            "slack_channel_id": order_dm["channel"],
+                            "message": order_dm["message"]["text"]
+                        }
+                    )
 
             elif i['bot_step_id'] == 5 or i['bot_step_id'] == 6:
                 if i['bot_step_id'] == 5:
