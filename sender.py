@@ -30,59 +30,71 @@ def post_message():
             if i['bot_step_id'] == 1:
                 print('bot_step_id === 1,  for data ==== ', i)
                 print('\n i["objectives"]', i['objectives'], '\n')
-                order_dm = WebClient(i['slack_access_token']).chat_postMessage(
-                    as_user=False,
-                    channel=i['slack_channel_id'],
-                    blocks=[
-                        {
-                            "type": "section",
-                            "text": {
-                                "type": "mrkdwn",
-                                "text": i['bot_step_title']
-                            },
-                            "accessory": {
-                                "type": "button",
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": "Send focus",
-                                    # "emoji": true
-                                },
-                                "value": "focus"
+                if i['objectives'] == []:
+                    WebClient(i['slack_access_token']).chat_postMessage(
+                        as_user=False,
+                        channel=i['slack_channel_id'],
+                        blocks=[
+                            {
+                                "type": "section",
+                                "text": responseJson['msg']
                             }
+                        ]
+                    )
+                else:
+                    order_dm = WebClient(i['slack_access_token']).chat_postMessage(
+                        as_user=False,
+                        channel=i['slack_channel_id'],
+                        blocks=[
+                            {
+                                "type": "section",
+                                "text": {
+                                    "type": "mrkdwn",
+                                    "text": i['bot_step_title']
+                                },
+                                "accessory": {
+                                    "type": "button",
+                                    "text": {
+                                        "type": "plain_text",
+                                        "text": "Send focus",
+                                        # "emoji": true
+                                    },
+                                    "value": "focus"
+                                }
+                            }
+                        ],
+                        attachments=''
+                    )
+
+                    print(order_dm)
+                    obj_list = []
+                    for j in i["objectives"]:
+                        x = {
+                            "Id": j["Id"],
+                            "Title": j["Title"]
                         }
-                    ],
-                    attachments=''
-                )
-
-                print(order_dm)
-                obj_list = []
-                for j in i["objectives"]:
-                    x = {
-                        "Id": j["Id"],
-                        "Title": j["Title"]
+                        obj_list.append(x)
+                    user_data_dict = {
+                            "bot_uniq_id": BOT_ID,
+                            "bot_schedule_id": int(i['bot_schedule_id']),
+                            "slack_client_id": i['slack_client_id'],
+                            "slack_channel_id": order_dm["channel"],
+                            "slack_ts": order_dm["ts"],
+                            "focus": '',
+                            "slack_access_token": i['slack_access_token'],
+                            "bot_step_title": i['bot_step_title'],
+                            "bot_next_step_success_title": i['bot_next_step_success_title'],
+                            "objectives": obj_list
                     }
-                    obj_list.append(x)
-                user_data_dict = {
-                        "bot_uniq_id": BOT_ID,
-                        "bot_schedule_id": int(i['bot_schedule_id']),
-                        "slack_client_id": i['slack_client_id'],
-                        "slack_channel_id": order_dm["channel"],
-                        "slack_ts": order_dm["ts"],
-                        "focus": '',
-                        "slack_access_token": i['slack_access_token'],
-                        "bot_step_title": i['bot_step_title'],
-                        "bot_next_step_success_title": i['bot_next_step_success_title'],
-                        "objectives": obj_list
-                }
 
-                print("user_data_dict ===", user_data_dict)
-                USER_INFO.append(
-                    {
-                        "slack_client_id": i['slack_client_id'],
-                        "slack_channel_id": order_dm["channel"],
-                        "message": order_dm["message"]["text"]
-                    }
-                )
+                    print("user_data_dict ===", user_data_dict)
+                    USER_INFO.append(
+                        {
+                            "slack_client_id": i['slack_client_id'],
+                            "slack_channel_id": order_dm["channel"],
+                            "message": order_dm["message"]["text"]
+                        }
+                    )
 
             elif i['bot_step_id'] == 5 or i['bot_step_id'] == 6:
                 if i['bot_step_id'] == 5:
@@ -216,6 +228,7 @@ def respond():
     for key in redis_keys:
         if "user_" in key.decode("utf-8"):
             USER = json.loads(r.get(key).decode('utf-8'))
+            print('Key====', key)
             slack_payload = json.loads(request.form.get("payload"))
             print('\n USER ========== ', USER, '\n')
             print('\n slack_payload in start foo=', slack_payload, '\n')
@@ -391,6 +404,7 @@ def respond():
                                     }
                                 }
                         ]
+                        r.del(key)
                         requests.post(POST, json=MESSAGE_SERVER)
             print("End of /after_button \n")
     return make_response("", 200)
