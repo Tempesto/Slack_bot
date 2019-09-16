@@ -24,7 +24,7 @@ def post_message():
     print("Start postMessage")
     response = requests.get(GET+BOT_ID)
     responseJson = response.json()
-    print('Data ==== ', responseJson['data'])
+    print('Data ==== responseJson (get)', responseJson['data'])
     if len(responseJson['data']) != 0:
         for i in responseJson['data']:
             if i['bot_step_id'] == 1:
@@ -255,6 +255,7 @@ def respond():
                                 "label": objective["Title"],
                                 "value": objective["Id"]
                             })
+                        print('\n All objective in  USER=====', a +'\n')
                         WebClient(USER['slack_access_token']).dialog_open(
                             trigger_id=slack_payload['trigger_id'],
                             dialog={
