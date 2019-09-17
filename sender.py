@@ -211,7 +211,7 @@ def add():
         "slack_channel_id": auth_response['incoming_webhook']['channel_id'],
     }
     print('send_data ===', send_data)
-    print('\n client_data[name]===', client_data['name'])
+    print('\n client_data name===', client_data['user']['name'])
     send_req = requests.post(COLLBACK, json=send_data)
     print('send_req == =', send_req)
     print('respons===', send_req.content)
