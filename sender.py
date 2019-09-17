@@ -30,7 +30,7 @@ def post_message():
             if i['bot_step_id'] == 1:
                 print('bot_step_id === 1,  for data ==== ', i)
                 print('\n i["objectives"]', i['objectives'], '\n')
-                if i['objectives'] == 0:
+                if i['objectives'] == []:
                     WebClient(i['slack_access_token']).chat_postMessage(
                         as_user=False,
                         channel=i['slack_channel_id'],
