@@ -35,10 +35,8 @@ def post_message():
                     WebClient(i['slack_access_token']).chat_postMessage(
                         as_user=False,
                         channel=i['slack_channel_id'],
-                        blocks=[{
-                            "type": "section",
-                            "text": responseJson['msg']
-                        }])
+                        text= responseJson['msg']
+                        )
                 else:
                     order_dm = WebClient(i['slack_access_token']).chat_postMessage(
                         as_user=False,
