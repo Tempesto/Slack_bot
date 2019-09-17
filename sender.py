@@ -23,6 +23,7 @@ def post_message():
     user_data_dict = {}
     print("Start postMessage")
     response = requests.get(GET+BOT_ID)
+    print('response ==', response)
     responseJson = response.json()
     print('Data ==== responseJson (get)', responseJson['data'])
     print('responseJson[msg]', responseJson['msg'])
