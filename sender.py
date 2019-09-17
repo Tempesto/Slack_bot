@@ -133,10 +133,11 @@ def post_message():
             if i['bot_step_id'] == 4 or i['bot_step_id'] == 5 or i['bot_step_id'] == 6 or i['bot_step_id'] == 7:
                 continue
             else:
-                redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
-                print("redis_user_key", redis_user_key)
-                print("saved to redis ===== ", user_data_dict)
-                r.set(redis_user_key, json.dumps(user_data_dict))
+                if i['objectives'] != []:
+                    redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
+                    print("redis_user_key", redis_user_key)
+                    print("saved to redis ===== ", user_data_dict)
+                    r.set(redis_user_key, json.dumps(user_data_dict))
     threading.Timer(60, post_message).start()
     print("End of post_message")
 
