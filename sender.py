@@ -129,6 +129,7 @@ def post_message():
                     channel=i['slack_channel_id'],
                     ts=user_redis['slack_ts']
                 )
+                r.delete(user_redis)
 
             if i['bot_step_id'] == 4 or i['bot_step_id'] == 5 or i['bot_step_id'] == 6 or i['bot_step_id'] == 7:
                 continue
