@@ -215,7 +215,7 @@ def add():
     send_req = requests.post(COLLBACK, json=send_data)
     print('send_req == =', send_req)
     print('respons===', send_req.content)
-    return redirect('https://'+sub_dom+'.'+'dev.unitonomy.com')
+    return redirect('https://'+sub_dom+'.'+'staging.unitonomy.com')
 
 
 # user click button
