@@ -409,5 +409,5 @@ def respond():
 
 
 if __name__ == "__main__":
-    post_message()
+    #post_message()
     slack_events_adapter.start(port=3000)
