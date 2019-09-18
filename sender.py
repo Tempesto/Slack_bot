@@ -33,11 +33,28 @@ def post_message():
                 print('bot_step_id === 1,  for data ==== ', i)
                 print('\n i["objectives"]', i['objectives'], '\n')
                 if i['objectives'] == []:
-                    WebClient(i['slack_access_token']).chat_postMessage(
+                    order_dm = WebClient(i['slack_access_token']).chat_postMessage(
                         as_user=False,
                         channel=i['slack_channel_id'],
                         text= responseJson['msg']
                         )
+                    print('order_dm', order_dm)
+                    MESSAGE_SERVER = {
+                        "bot_uniq_id": BOT_ID,
+                        "completed_bot_step": 7,
+                        "bot_schedule_id": int(i["bot_schedule_id"]),
+                        "slack_client_id": i['slack_client_id'],
+                        "slack_channel_id": order_dm["channel"],
+                        "slack_ts": order_dm["ts"],
+                        "data": {
+
+                            "focus_title": '',
+                            "objective_id": None
+                        }
+                    }
+                    print("MESSAGE_SERVER if not objectives=== ", MESSAGE_SERVER)
+                    response_client_data = requests.post(POST, json=MESSAGE_SERVER)
+                    print('response_client_data===', response_client_data)
                 else:
                     order_dm = WebClient(i['slack_access_token']).chat_postMessage(
                         as_user=False,
@@ -134,10 +151,11 @@ def post_message():
             if i['bot_step_id'] == 4 or i['bot_step_id'] == 5 or i['bot_step_id'] == 6 or i['bot_step_id'] == 7:
                 continue
             else:
-                redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
-                print("redis_user_key", redis_user_key)
-                print("saved to redis ===== ", user_data_dict)
-                r.set(redis_user_key, json.dumps(user_data_dict))
+                if i['objectives'] != []:
+                    redis_user_key = "user_" + i['slack_client_id'] + "_" + str(i['bot_schedule_id'])
+                    print("redis_user_key", redis_user_key)
+                    print("saved to redis ===== ", user_data_dict)
+                    r.set(redis_user_key, json.dumps(user_data_dict))
     threading.Timer(60, post_message).start()
     print("End of post_message")
 
